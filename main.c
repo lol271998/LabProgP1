@@ -57,7 +57,7 @@ void existing_table() {
 			char* sel = malloc(sizeof(char)*MAX_BUFFER_SIZE);
 
 			printf("+--------------------------------------------------------------+\n");
-			printf("| Ficheiro n√£o existe.                                         |\n");
+			printf("| Ficheiro n„o existe.                                         |\n");
 			printf("| Verifique se escreveu o nome sem erros.                      |\n");
 			printf("| Quer criar um novo ficheiro com esse nome ?                  |\n");
 			printf("| s para sim, n para reescrever o nome do ficheiro.            |\n");
@@ -87,7 +87,7 @@ void existing_table() {
 							return;
 							break;
 						default:
-							printf("Error: Escolha uma op√ß√£o v√°lida\n\n");
+							printf("Error: Escolha uma opÁ„o v·lida\n\n");
 					}
 				}
 				free(sel);
@@ -168,7 +168,7 @@ void menu() {
 					return;
 					break;
 				default:
-					printf("Error: Escolha uma op√ß√£o v√°lida\n\n");
+					printf("Error: Escolha uma opÁ„o v·lida\n\n");
 			}
 		}
 	}
@@ -186,13 +186,13 @@ void func() {
 
 		printf("+--------------------------------------------------------------+\n");
 		printf("| 1. Adicionar tarefas a ToDo                                  |\n");
-		printf("| 2. Mover Cart√µes                                             |\n");
-		printf("| 3. Alterar pessoa respons√°vel                                |\n");
+		printf("| 2. Mover Cartıes                                             |\n");
+		printf("| 3. Alterar pessoa respons·vel                                |\n");
 		printf("| 4. Terminar uma tarefa                                       |\n"); //Passar para done
 		printf("| 5. Passar tarefa Done ToDo                                   |\n");
 		printf("| 6. Vizualizar o quadro                                       |\n");
 		printf("| 7. Vizualizar as tarefas de uma pessoa                       |\n");
-		printf("| 8. Vizualizar todas as tarefas ordenadas por data de cria√ß√£o |\n");
+		printf("| 8. Vizualizar todas as tarefas ordenadas por data de criaÁ„o |\n");
 		printf("+--------------------------------------------------------------+\n");
 
 		scanf(" %s",sel);
@@ -242,13 +242,13 @@ void func() {
 					return;
 					break;
 				default:
-					printf("Error: Escolha uma op√ß√£o v√°lida\n\n");
+					printf("Error: Escolha uma opÁ„o v·lida\n\n");
 			}
 		}
 	}
 }
 
-//Fazer uma fun√ß√£o que prepare o ambiente para testing, isto √©, mover ficheiros, para temp ou saves, consoante o teste
+//Fazer uma funÁ„o que prepare o ambiente para testing, isto È, mover ficheiros, para temp ou saves, consoante o teste
 
 int main(int argc, char const *argv[]) {
 
@@ -257,4 +257,6 @@ int main(int argc, char const *argv[]) {
 	menu();
 
 	return 0;
+
+
 }
