@@ -23,17 +23,24 @@ struct task {
 };
 
 
-typedef struct ldone LDONE;
+typedef struct list *LIST;
 
-struct ldone {
+struct list{
     TASK t;
-    struct ldone* next;
-};
+    LIST next;
+}List_node;
 
-void addToDo(TASK t);
+LIST createToDo();
+void addToDo(TASK t); //Data de sistema
+
+void createDoing();
 void toDo2Doing(TASK t);
+
+LIST createDone();
 void Doing2Done(TASK t);
 void Done2ToDo(TASK t);
+void printDone();
+
 void printTable();
 void printIndTask(char* name);
 void printAllTask();
