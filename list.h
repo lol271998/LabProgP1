@@ -26,8 +26,20 @@ struct task {
 typedef struct ldone LDONE;
 
 struct ldone {
-    TASK tname;
+    TASK t;
     struct ldone* next;
 };
 
+void addToDo(TASK t);
+void toDo2Doing(TASK t);
+void Doing2Done(TASK t);
+void Done2ToDo(TASK t);
+void printTable();
+void printIndTask(char* name);
+void printAllTask();
+
+
+
 #endif // LIST_H_INCLUDED
+
+
