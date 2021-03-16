@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include "list.h"
 
 #define MAX_BUFFER_SIZE 1024
 
@@ -11,7 +12,7 @@ void systemclear();
 
 void systemclear() {
 	system("clear");
-	printf("Quadro de Kabam\n\n");
+	printf("Quadro de KanBan\n\n");
 }
 
 bool file_exist(const char * filename){
