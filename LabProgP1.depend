@@ -1,14 +1,16 @@
 # depslib dependency file v1.0
-1615931263 source:/home/fcd/Desktop/LabProgP1/main.c
+1615988718 source:/home/fcd/Desktop/LabProgP1/main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<stdbool.h>
 	"list.h"
 
-1615931155 /home/fcd/Desktop/LabProgP1/list.h
+1615985072 /home/fcd/Desktop/LabProgP1/list.h
 
-1615931193 source:/home/fcd/Desktop/LabProgP1/list.c
+1615988734 source:/home/fcd/Desktop/LabProgP1/list.c
 	"list.h"
 	<time.h>
+	<stdlib.h>
+	<stdio.h>
 

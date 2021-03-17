@@ -257,6 +257,27 @@ int main(int argc, char const *argv[]) {
 	//menu();
     LIST l = createDone();
     printDone(l);
+    printf("size: %d\n",size(l));
+    printf("\n");
+
+    //TASK createTASK(int day, int month, int year, char* name, int id, int p, char* owner);
+    TASK tname = createTASK(1,2,1998,"joao",1,10,"alberto");
+    Doing2Done(l,tname);
+    printDone(l);
+    printf("size: %d\n",size(l));
+    printf("\n");
+
+    tname = createTASK(1,2,1997,"joao",2,10,"alberto");
+    Doing2Done(l,tname);
+    printDone(l);
+    printf("size: %d\n",size(l));
+    printf("\n");
+
+    tname = createTASK(1,2,1999,"joao",3,10,"alberto");
+    Doing2Done(l,tname);
+    printDone(l);
+    printf("size: %d\n",size(l));
+    printf("\n");
 
 	return 0;
 

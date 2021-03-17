@@ -26,19 +26,22 @@ struct task {
 typedef struct list *LIST;
 
 struct list{
-    TASK t;
+    TASK task;
     LIST next;
 }List_node;
 
+int size(LIST l); //Devolve o tamanho da lista
+TASK createTASK(int day, int month, int year, char* name, int id, int p, char* owner);
+
 LIST createToDo();
-void addToDo(TASK t); //Data de sistema
+void addToDo(LIST l, TASK t); //Data de sistema
 
 void createDoing();
-void toDo2Doing(TASK t);
+void toDo2Doing(LIST l, TASK t);
 
 LIST createDone();
-void Doing2Done(TASK t);
-void Done2ToDo(TASK t);
+void Doing2Done(LIST l, TASK t);
+void Done2ToDo(LIST l, TASK t);
 void printDone();
 
 void printTable();

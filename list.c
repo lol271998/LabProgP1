@@ -2,7 +2,25 @@
 #include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
-/*
+
+TASK createTASK(int day, int month, int year, char* name, int id, int p, char* owner) {
+
+    DATE d;
+    d.day = day;
+    d.month = month;
+    d.year = year;
+
+    TASK t_info;
+    t_info.name = name;
+    t_info.id = id;
+    t_info.priority = p;
+    t_info.owner = owner;
+    t_info.dStart = d;
+    t_info.deadLine = d;
+    t_info.dEnd = d;
+
+    return t_info;
+}
 
 LIST createDone() {
 
@@ -25,18 +43,31 @@ LIST createDone() {
     l = (LIST) malloc (sizeof (List_node));
 
     if(l != NULL) {
-        l->t = t_head;
+        l->task = t_head;
         l->next = NULL;
     }
 
     return l;
 }
 
+int size(LIST l) {
+    LIST temp = l;
+    if(temp->next == NULL) return 0;
+
+    int count = 1;
+    temp = temp->next;
+    while(temp->next != NULL) {
+        temp = temp->next;
+        count++;
+    }
+    return count;
+}
+
 /**
 *
 * Devolve 1 se d1 > d2, -1 se d1 < d2, 0 se d1 = d2
 *
-
+*/
 int compareDate(DATE d1, DATE d2) {
 
     if(d1.year>d2.year) return 1;
@@ -58,28 +89,65 @@ int compareToDone(TASK t1, TASK t2) {
     return compareDate(t1.dEnd,t2.dEnd);
 }
 
-void Doing2Done(TASK t) {
+/*
+void DoneSearch(LISTA l, DATE d, LISTA *prev, LIST *cur) {
+    *prev = l;
+    *cur = l->next;
 
-    LIST node;
-
-    node = (LIST) malloc (sizeof(List_node));
-
-    while (node != NULL) {
-        if(compareToDone(node->t,t)>=0) {
-            //Inserir antes
-        }
-        else; //Inserir depois
-    }
+    while((*cur) != NULL && (*actual))
 }
+*/
+
+//Ordenado por data de conclusão
+void Doing2Done(LIST l, TASK t) {
+
+    LIST cur,prev;
+    cur = l;
+    prev = l;
+
+    LIST node = (LIST) malloc (sizeof(List_node));
+    node->task = t;
+
+    if(cur -> next == NULL) {
+        node->next = NULL;
+        cur -> next = node;
+    }
+
+    else {
+        cur = cur->next;
+        while(cur != NULL) {
+            if(compareToDone(cur->task,t)>=1) {
+                prev -> next = node;
+                node -> next = cur;
+                return;
+            }
+            else {
+                cur = cur->next;
+                prev = prev->next;
+            }
+        }
+        prev -> next = node;
+        node -> next = NULL;
+    }
+
+}
+
 /**
 *
 * Just for testing purposes
 *
-*
+*/
 void printDone(LIST l) {
-    while(l) {
-        printf("%d ", l->t.id);
-        l=l->next;
+    LIST temp = l;
+    temp = temp->next;
+    while(temp) {
+        printDate(temp->task.dEnd);
+        printf("\n");
+        temp=temp->next;
     }
 }
-*/
+
+void printDate(DATE d) {
+    printf("%d/%d/%d",d.day,d.month,d.year);
+}
+
