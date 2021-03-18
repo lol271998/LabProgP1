@@ -2,7 +2,6 @@
 #define LIST_H_INCLUDED
 
 typedef struct date DATE;
-
 struct date {
     int year;
     int month;
@@ -24,31 +23,30 @@ struct task {
 
 
 typedef struct list *LIST;
-
 struct list{
     TASK task;
     LIST next;
 }List_node;
 
-int size(LIST l); //Devolve o tamanho da lista
-TASK createTASK(int day, int month, int year, char* name, int id, int p, char* owner);
+int size(LIST l); //Devolve o tamanho da lista //Done
+TASK createTASK(int day, int month, int year, char* name, int id, int p, char* owner); //Done
 
-LIST createToDo();
+LIST createList(); //Done
+
 void addToDo(LIST l, TASK t); //Data de sistema
 
-void createDoing();
-void toDo2Doing(LIST l, TASK t);
+void toDo2Doing(LIST l, TASK t);//Done
+void printDoing(LIST l);//Done
 
-LIST createDone();
-void Doing2Done(LIST l, TASK t);
+void Doing2Done(LIST l, TASK t);//Done 3x
 void Done2ToDo(LIST l, TASK t);
-void printDone();
+void printDone();//Done
 
 void printTable();
 void printIndTask(char* name);
 void printAllTask();
 
-
+void printDate(DATE d);
 
 #endif // LIST_H_INCLUDED
 

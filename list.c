@@ -2,6 +2,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 TASK createTASK(int day, int month, int year, char* name, int id, int p, char* owner) {
 
@@ -22,7 +23,7 @@ TASK createTASK(int day, int month, int year, char* name, int id, int p, char* o
     return t_info;
 }
 
-LIST createDone() {
+LIST createList() {
 
     DATE d;
     d.day = 0;
@@ -98,7 +99,7 @@ void DoneSearch(LISTA l, DATE d, LISTA *prev, LIST *cur) {
 }
 */
 
-//Ordenado por data de conclusão
+//Ordenado por data de conclusão (task.dEnd)
 void Doing2Done(LIST l, TASK t) {
 
     LIST cur,prev;
@@ -132,6 +133,41 @@ void Doing2Done(LIST l, TASK t) {
 
 }
 
+void auxToDo2Doing(LIST lista,TASK t,LIST *ant,LIST *atual){
+    *ant=lista;
+    *atual=lista->next;
+    while ((*atual) != NULL && (strcmp((*atual)->task.name,t.name)<0) ){
+        *ant = *atual;
+        *atual = (*atual)->next;
+    }
+}
+
+//Ordenado por nome (task.name)
+void toDo2Doing(LIST l, TASK t){
+    LIST node;
+    LIST ant,inut;
+    node = (LIST) malloc (sizeof(List_node));
+    if(node!=NULL){
+        node->task = t;
+        auxToDo2Doing(l,t,&ant,&inut);
+        node->next = ant->next;
+        ant->next = node;
+    }
+}
+//Ordenado por prioridade e depois data de ciraçao (task.priority) (task.dStart)
+void Done2ToDo(LIST l, TASK t){
+    LIST node;
+    LIST ant,inut;
+    node = (LIST) malloc (sizeof(List_node));
+    if(node!=NULL){
+        node->task = t;
+        auxToDo2Doing(l,t,&ant,&inut);
+        node->next = ant->next;
+        ant->next = node;
+    }
+}
+
+
 /**
 *
 * Just for testing purposes
@@ -149,5 +185,14 @@ void printDone(LIST l) {
 
 void printDate(DATE d) {
     printf("%d/%d/%d",d.day,d.month,d.year);
+}
+
+void printDoing(LIST l){
+     LIST temp = l;
+    temp = temp->next;
+    while(temp){
+        printf("%s\n",temp->task.name);
+        temp=temp->next;
+    }
 }
 

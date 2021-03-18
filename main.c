@@ -254,8 +254,8 @@ int main(int argc, char const *argv[]) {
 
  	systemclear();
 
-	//menu();
-    LIST l = createDone();
+	menu();
+    LIST l = createList();
     printDone(l);
     printf("size: %d\n",size(l));
     printf("\n");
@@ -277,6 +277,38 @@ int main(int argc, char const *argv[]) {
     Doing2Done(l,tname);
     printDone(l);
     printf("size: %d\n",size(l));
+    printf("\n");
+
+    printf("---------------------------------------,,-------------------------------\n");
+
+    LIST l2=createList();
+
+    printDoing(l2);
+    printf("size: %d\n",size(l2));
+    printf("\n");
+
+    TASK t2 = createTASK(1,2,1998,"antonio",1,10,"alberto");
+    toDo2Doing(l2,t2);
+    printDoing(l2);
+    printf("size: %d\n",size(l2));
+    printf("\n");
+
+    t2 = createTASK(1,2,1998,"bernardo",1,10,"alberto");
+    toDo2Doing(l2,t2);
+    printDoing(l2);
+    printf("size: %d\n",size(l2));
+    printf("\n");
+
+    t2 = createTASK(1,2,1998,"bard",1,10,"alberto");
+    toDo2Doing(l2,t2);
+    printDoing(l2);
+    printf("size: %d\n",size(l2));
+    printf("\n");
+
+    t2 = createTASK(1,2,1998,"ana",1,10,"alberto");
+    toDo2Doing(l2,t2);
+    printDoing(l2);
+    printf("size: %d\n",size(l2));
     printf("\n");
 
 	return 0;
