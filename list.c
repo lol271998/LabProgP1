@@ -31,10 +31,10 @@ LIST createList() {
     d.year = 0;
 
     TASK t_head;
-    t_head.name = "NULL";
+    t_head.name = NULL;
     t_head.id = -1;
     t_head.priority = -1;
-    t_head.owner = "NULL";
+    t_head.owner = NULL;
     t_head.dStart = d;
     t_head.deadLine = d;
     t_head.dEnd = d;
@@ -63,6 +63,7 @@ int size(LIST l) {
     }
     return count;
 }
+
 
 /**
 *
@@ -100,7 +101,7 @@ void DoneSearch(LISTA l, DATE d, LISTA *prev, LIST *cur) {
 */
 
 //Ordenado por data de conclusão (task.dEnd)
-void Doing2Done(LIST l, TASK t) {
+void addDone (LIST l, TASK t) {
 
     LIST cur,prev;
     cur = l;
@@ -109,17 +110,17 @@ void Doing2Done(LIST l, TASK t) {
     LIST node = (LIST) malloc (sizeof(List_node));
     node->task = t;
 
-    if(cur -> next == NULL) {
+    if(cur->next == NULL) {
         node->next = NULL;
-        cur -> next = node;
+        cur->next = node;
     }
 
     else {
         cur = cur->next;
         while(cur != NULL) {
             if(compareToDone(cur->task,t)>=1) {
-                prev -> next = node;
-                node -> next = cur;
+                prev->next = node;
+                node->next = cur;
                 return;
             }
             else {
@@ -127,9 +128,63 @@ void Doing2Done(LIST l, TASK t) {
                 prev = prev->next;
             }
         }
-        prev -> next = node;
-        node -> next = NULL;
+        prev->next = node;
+        node->next = NULL;
     }
+
+}
+/**
+*
+* Remove uma tarefa de uma lista, se removida com sucesso devolve a tarefa pretendida
+* Caso contrário devolve uma tarefa tnull com id = -1 (id inválido)
+*
+*/
+TASK removeTask(LIST l, TASK t) {
+    TASK tnull = createTASK(0,0,0,NULL,-1,-1,NULL);
+    LIST cur, prev;
+    cur = l;
+    prev = l;
+
+    cur = cur->next;
+    if(cur->task.id == t.id) {
+        prev->next = cur->next;
+        printf("removedFirst\n");
+        return t;
+    }
+
+    prev = prev->next;
+    cur = cur->next;
+
+    while(cur->next != NULL) {
+        if(cur->task.id == t.id) {
+            prev->next = cur->next;
+            /*
+            printf("\nprev: %s\n\n",prev->task.name);
+            printf("\ncur: %s\n\n",cur->task.name);
+            */
+            return t;
+        }
+        else {
+            /*
+            printf("\nprev: %s\n\n",prev->task.name);
+            printf("\ncur: %s\n\n",cur->task.name);
+            */
+            prev = prev->next;
+            cur = cur->next;
+        }
+    }
+
+    //printf("\nprev: %s\n\n",prev->task.name);
+
+    if(cur->task.id == t.id) {
+        prev->next = cur->next;
+    }
+    else {
+        //Não existe
+        return tnull;
+    }
+
+    return t;
 
 }
 
@@ -188,7 +243,7 @@ void printDate(DATE d) {
 }
 
 void printDoing(LIST l){
-     LIST temp = l;
+    LIST temp = l;
     temp = temp->next;
     while(temp){
         printf("%s\n",temp->task.name);

@@ -1,18 +1,19 @@
 # depslib dependency file v1.0
-1615988718 source:/home/fcd/Desktop/LabProgP1/main.c
+1616424490 source:/home/fcd/Desktop/LabProgP1/main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<stdbool.h>
 	"list.h"
 
-1615985072 /home/fcd/Desktop/LabProgP1/list.h
+1616422830 /home/fcd/Desktop/LabProgP1/list.h
 
-1615988734 source:/home/fcd/Desktop/LabProgP1/list.c
+1616424748 source:/home/fcd/Desktop/LabProgP1/list.c
 	"list.h"
 	<time.h>
 	<stdlib.h>
 	<stdio.h>
+	<string.h>
 
 1616059154 source:c:\users\grand\documents\fac\2 semestre\lp\kabanproject\labprogp1\list.c
 	"list.h"

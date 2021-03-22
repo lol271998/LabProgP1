@@ -38,9 +38,12 @@ void addToDo(LIST l, TASK t); //Data de sistema
 void toDo2Doing(LIST l, TASK t);//Done
 void printDoing(LIST l);//Done
 
+void addDone(LIST l, TASK t);
 void Doing2Done(LIST l, TASK t);//Done 3x
 void Done2ToDo(LIST l, TASK t);
 void printDone();//Done
+
+TASK removeTask(LIST l, TASK t);
 
 void printTable();
 void printIndTask(char* name);

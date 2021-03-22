@@ -262,19 +262,19 @@ int main(int argc, char const *argv[]) {
 
     //TASK createTASK(int day, int month, int year, char* name, int id, int p, char* owner);
     TASK tname = createTASK(1,2,1998,"joao",1,10,"alberto");
-    Doing2Done(l,tname);
+    addDone(l,tname);
     printDone(l);
     printf("size: %d\n",size(l));
     printf("\n");
 
     tname = createTASK(1,2,1997,"joao",2,10,"alberto");
-    Doing2Done(l,tname);
+    addDone(l,tname);
     printDone(l);
     printf("size: %d\n",size(l));
     printf("\n");
 
     tname = createTASK(1,2,1999,"joao",3,10,"alberto");
-    Doing2Done(l,tname);
+    addDone(l,tname);
     printDone(l);
     printf("size: %d\n",size(l));
     printf("\n");
@@ -287,30 +287,32 @@ int main(int argc, char const *argv[]) {
     printf("size: %d\n",size(l2));
     printf("\n");
 
-    TASK t2 = createTASK(1,2,1998,"antonio",1,10,"alberto");
+    TASK t1,t2,t3,t4;
+    t1 = createTASK(1,2,1998,"antonio",1,10,"alberto");
+    toDo2Doing(l2,t1);
+    printDoing(l2);
+    printf("size: %d\n",size(l2));
+    printf("\n");
+
+    t2 = createTASK(1,2,1998,"bernardo",2,10,"alberto");
     toDo2Doing(l2,t2);
     printDoing(l2);
     printf("size: %d\n",size(l2));
     printf("\n");
 
-    t2 = createTASK(1,2,1998,"bernardo",1,10,"alberto");
-    toDo2Doing(l2,t2);
+    t3 = createTASK(1,2,1998,"bard",3,10,"alberto");
+    toDo2Doing(l2,t3);
     printDoing(l2);
     printf("size: %d\n",size(l2));
     printf("\n");
 
-    t2 = createTASK(1,2,1998,"bard",1,10,"alberto");
-    toDo2Doing(l2,t2);
+    t4 = createTASK(1,2,1998,"ana",4,10,"alberto");
+    toDo2Doing(l2,t4);
     printDoing(l2);
     printf("size: %d\n",size(l2));
-    printf("\n");
 
-    t2 = createTASK(1,2,1998,"ana",1,10,"alberto");
-    toDo2Doing(l2,t2);
-    printDoing(l2);
-    printf("size: %d\n",size(l2));
-    printf("\n");
-
+    TASK t5 = createTASK(1,2,1998,"joao",5,10,"alberto");
+    printf("%d",removeTask(l2,t5).id);
 	return 0;
 
 
