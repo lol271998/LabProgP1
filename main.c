@@ -5,9 +5,14 @@
 #include <time.h>
 #include "list.h"
 
+#ifdef _WIN32
+#define CLEAR "cls"
+#else
+#define CLEAR "clear"
+#endif
+
 #define MAX_BUFFER_SIZE 1024
 
-void systemclear();
 bool file_exit(const char* filename);
 void existing_table();
 
@@ -19,10 +24,6 @@ void func();
 LIST lToDo,lDoing,lDone;
 int id;
 
-void systemclear() {
-	system("clear");
-	printf("Quadro de KanBan\n\n");
-}
 
 bool file_exist(const char * filename){
     /* try to open file to read */
@@ -58,7 +59,7 @@ void existing_table() {
 		strcpy(path,"/save/");
 		strcat(path,fname);
 
-		systemclear();
+		system(CLEAR);
 
 		if(file_exist(path)) {
 			/**
@@ -80,7 +81,7 @@ void existing_table() {
                 char* sel = malloc(sizeof(char)*MAX_BUFFER_SIZE);
 				scanf(" %s",sel);
 
-				systemclear();
+				system(CLEAR);
 
 				if(strlen(sel) > 1) printf("Introduza apenas um caracter\n\n");
 				else{
@@ -105,7 +106,7 @@ void existing_table() {
 				}
 				if(error == 2) break;
 				free(sel);
-				systemclear();
+				system(CLEAR);
 			}
 		}
 		free(fname);
@@ -148,7 +149,7 @@ void new_table(char* path) {
 *
 */
 void print_help() {
-	systemclear();
+	system(CLEAR);
 	printf("help\n");
     menu();
 }
@@ -171,7 +172,7 @@ void menu() {
 
 		scanf(" %s",sel);
 
-		systemclear();
+		system(CLEAR);
 
 
 		if(strlen(sel) > 1) printf("Introduza apenas um caracter\n\n");
@@ -205,7 +206,7 @@ void menu() {
 
 
 void addToDoInterface() {
-    systemclear();
+    system(CLEAR);
     int flag = 0;
     char *sel = malloc(sizeof(char)*MAX_BUFFER_SIZE);
 
@@ -263,7 +264,7 @@ void addToDoInterface() {
 }
 
 void toDo2Doing() {
-    systemclear();
+    system(CLEAR);
     int flag = 0;
     char *sel = malloc(sizeof(char)*MAX_BUFFER_SIZE);
 
@@ -332,7 +333,7 @@ void func(int n) {
 
 		scanf(" %s",sel);
 
-		systemclear();
+		system(CLEAR);
 
 		if(strlen(sel) > 1) printf("Introduza apenas um caracter \n\n");
 		else{
@@ -391,7 +392,7 @@ void func(int n) {
 
 int main(int argc, char const *argv[]) {
 
- 	systemclear();
+ 	//system(CLEAR);
     id = 0;
 	menu();
 	printToDo(lDone);

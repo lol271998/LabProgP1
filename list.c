@@ -113,6 +113,9 @@ int compareToDone(TASK t1, TASK t2) {
     return compareDate(t1.dEnd,t2.dEnd);
 }
 
+int compareToDo(TASK t1,TASK t2){
+    return compareDate(t1.dStart,t2.dStart);
+}
 /*
 void DoneSearch(LISTA l, DATE d, LISTA *prev, LIST *cur) {
     *prev = l;
@@ -156,7 +159,7 @@ void addDone (LIST l, TASK t) {
 
 }
 
-void aux(LIST lista,TASK t,LIST *ant,LIST *atual){
+void auxDoing(LIST lista,TASK t,LIST *ant,LIST *atual){
     *ant=lista;
     *atual=lista->next;
     while ((*atual) != NULL && (strcmp((*atual)->task.name,t.name)<0) ){
@@ -172,12 +175,24 @@ void addDoing(LIST l, TASK t){
     node = (LIST) malloc (sizeof(List_node));
     if(node!=NULL){
         node->task = t;
-        aux(l,t,&ant,&inut);
+        auxDoing(l,t,&ant,&inut);
         node->next = ant->next;
         ant->next = node;
     }
 }
 
+void auxToDo(LIST lista, TASK t,LIST *ant,LIST *atual){
+    *ant=lista;
+    *atual=lista->next;
+    while ((*atual) != NULL && ( (*atual)->task.priority>t.priority ) ){
+        *ant = *atual;
+        *atual = (*atual)->next;
+    }
+    while ((*atual) != NULL &&  (compareToDo((*atual)->task,t ))>=-1 ){
+        *ant = *atual;
+        *atual = (*atual)->next;
+    }
+}
 //Ordenado por prioridade e depois data de ciraçao (task.priority) (task.dStart)
 void addToDo(LIST l, TASK t){
     LIST node;
@@ -185,7 +200,7 @@ void addToDo(LIST l, TASK t){
     node = (LIST) malloc (sizeof(List_node));
     if(node!=NULL){
         node->task = t;
-        aux(l,t,&ant,&inut);
+        auxToDo(l,t,&ant,&inut);
         node->next = ant->next;
         ant->next = node;
     }
