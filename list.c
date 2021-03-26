@@ -4,21 +4,43 @@
 #include <stdio.h>
 #include <string.h>
 
-TASK createTASK(int day, int month, int year, char* name, int id, int p, char* owner) {
+DATE dNULL() {
+    DATE dNULL;
+    dNULL.day = 0;
+    dNULL.month = 0;
+    dNULL.year = 0;
 
-    DATE d;
-    d.day = day;
-    d.month = month;
-    d.year = year;
+    return dNULL;
+}
+
+/**
+*
+* Quando passamos de tabela para tabela não esquecer de:
+* - Atribuir dono (Doint)
+* - Atribuir Data limite (Doing)
+* - Atribuir data de conclusão (Done)
+*
+**/
+TASK createTASK(DATE d, char* name, int id, int p) {
+    /*
+    *
+    * Quando criamos uma tarefa só precisamos de:
+    * - Data de criação
+    * - nome da tarefa,
+    * - id
+    * - prioridade
+    *
+    */
+
 
     TASK t_info;
     t_info.name = name;
     t_info.id = id;
     t_info.priority = p;
-    t_info.owner = owner;
+    t_info.owner = NULL;
     t_info.dStart = d;
-    t_info.deadLine = d;
-    t_info.dEnd = d;
+    t_info.deadLine = dNULL();
+    t_info.dEnd = dNULL();
 
     return t_info;
 }
@@ -133,14 +155,71 @@ void addDone (LIST l, TASK t) {
     }
 
 }
+
+void aux(LIST lista,TASK t,LIST *ant,LIST *atual){
+    *ant=lista;
+    *atual=lista->next;
+    while ((*atual) != NULL && (strcmp((*atual)->task.name,t.name)<0) ){
+        *ant = *atual;
+        *atual = (*atual)->next;
+    }
+}
+
+//Ordenado por nome (task.name)
+void addDoing(LIST l, TASK t){
+    LIST node;
+    LIST ant,inut;
+    node = (LIST) malloc (sizeof(List_node));
+    if(node!=NULL){
+        node->task = t;
+        aux(l,t,&ant,&inut);
+        node->next = ant->next;
+        ant->next = node;
+    }
+}
+
+//Ordenado por prioridade e depois data de ciraçao (task.priority) (task.dStart)
+void addToDo(LIST l, TASK t){
+    LIST node;
+    LIST ant,inut;
+    node = (LIST) malloc (sizeof(List_node));
+    if(node!=NULL){
+        node->task = t;
+        aux(l,t,&ant,&inut);
+        node->next = ant->next;
+        ant->next = node;
+    }
+}
+
+/**
+*
+*
+* Dado um indice, procura uma tarefa
+*
+*/
+
+TASK findTask(LIST l,int ind) {
+    TASK tnull = createTASK(dNULL(),-1,-1,NULL);
+    LIST temp = l;
+    temp = temp->next;
+    int i = 1;
+    while(temp){
+        if(i == temp) return temp->task;
+        temp=temp->next;
+        i++;
+    }
+    return tnull;
+}
+
 /**
 *
 * Remove uma tarefa de uma lista, se removida com sucesso devolve a tarefa pretendida
 * Caso contrário devolve uma tarefa tnull com id = -1 (id inválido)
 *
 */
-TASK removeTask(LIST l, TASK t) {
-    TASK tnull = createTASK(0,0,0,NULL,-1,-1,NULL);
+
+void removeTask(LIST l, TASK t) {
+    TASK tnull = createTASK(dNULL(),-1,-1,NULL);
     LIST cur, prev;
     cur = l;
     prev = l;
@@ -148,7 +227,7 @@ TASK removeTask(LIST l, TASK t) {
     cur = cur->next;
     if(cur->task.id == t.id) {
         prev->next = cur->next;
-        printf("removedFirst\n");
+        //printf("removedFirst\n");
         return t;
     }
 
@@ -162,7 +241,7 @@ TASK removeTask(LIST l, TASK t) {
             printf("\nprev: %s\n\n",prev->task.name);
             printf("\ncur: %s\n\n",cur->task.name);
             */
-            return t;
+            return;
         }
         else {
             /*
@@ -178,49 +257,14 @@ TASK removeTask(LIST l, TASK t) {
 
     if(cur->task.id == t.id) {
         prev->next = cur->next;
+        return;
     }
     else {
         //Não existe
-        return tnull;
-    }
-
-    return t;
-
-}
-
-void auxToDo2Doing(LIST lista,TASK t,LIST *ant,LIST *atual){
-    *ant=lista;
-    *atual=lista->next;
-    while ((*atual) != NULL && (strcmp((*atual)->task.name,t.name)<0) ){
-        *ant = *atual;
-        *atual = (*atual)->next;
+        return;
     }
 }
 
-//Ordenado por nome (task.name)
-void toDo2Doing(LIST l, TASK t){
-    LIST node;
-    LIST ant,inut;
-    node = (LIST) malloc (sizeof(List_node));
-    if(node!=NULL){
-        node->task = t;
-        auxToDo2Doing(l,t,&ant,&inut);
-        node->next = ant->next;
-        ant->next = node;
-    }
-}
-//Ordenado por prioridade e depois data de ciraçao (task.priority) (task.dStart)
-void Done2ToDo(LIST l, TASK t){
-    LIST node;
-    LIST ant,inut;
-    node = (LIST) malloc (sizeof(List_node));
-    if(node!=NULL){
-        node->task = t;
-        auxToDo2Doing(l,t,&ant,&inut);
-        node->next = ant->next;
-        ant->next = node;
-    }
-}
 
 
 /**
@@ -228,6 +272,7 @@ void Done2ToDo(LIST l, TASK t){
 * Just for testing purposes
 *
 */
+
 void printDone(LIST l) {
     LIST temp = l;
     temp = temp->next;
@@ -236,6 +281,24 @@ void printDone(LIST l) {
         printf("\n");
         temp=temp->next;
     }
+}
+
+void printToDo(LIST l) {
+
+    LIST temp = l;
+    temp = temp->next;
+    int i = 1;
+    while(temp) {
+        printf("\n \n");
+        printf("%d. Nome: %s\n",i,temp->task.name);
+        printf("   id: %d\n",temp->task.id);
+        printf("   prioridade: %d\n",temp->task.priority);
+        printf("\n \n");
+        i++;
+        temp = temp->next;
+    }
+
+
 }
 
 void printDate(DATE d) {
