@@ -112,15 +112,9 @@ int compareDate(DATE d1, DATE d2) {
 int compareToDone(TASK t1, TASK t2) {
     return compareDate(t1.dEnd,t2.dEnd);
 }
-<<<<<<< HEAD
 
 int compareToDo(TASK t1,TASK t2){
     return compareDate(t1.dStart,t2.dStart);
-=======
-
-int compareToDo(TASK t1,TASK t2){
-    return compareDate(t1.dStart,t2.dStart);
->>>>>>> 8cdfe12a59ac96d4534b0076c35fc3ab10e2d017
 }
 /*
 void DoneSearch(LISTA l, DATE d, LISTA *prev, LIST *cur) {
@@ -186,7 +180,6 @@ void addDoing(LIST l, TASK t){
         ant->next = node;
     }
 }
-<<<<<<< HEAD
 
 void auxToDo(LIST lista, TASK t,LIST *ant,LIST *atual){
     *ant=lista;
@@ -199,20 +192,6 @@ void auxToDo(LIST lista, TASK t,LIST *ant,LIST *atual){
         *ant = *atual;
         *atual = (*atual)->next;
     }
-=======
-
-void auxToDo(LIST lista, TASK t,LIST *ant,LIST *atual){
-    *ant=lista;
-    *atual=lista->next;
-    while ((*atual) != NULL && ( (*atual)->task.priority>t.priority ) ){
-        *ant = *atual;
-        *atual = (*atual)->next;
-    }
-    while ((*atual) != NULL &&  (compareToDo((*atual)->task,t ))>=-1 ){
-        *ant = *atual;
-        *atual = (*atual)->next;
-    }
->>>>>>> 8cdfe12a59ac96d4534b0076c35fc3ab10e2d017
 }
 //Ordenado por prioridade e depois data de ciraçao (task.priority) (task.dStart)
 void addToDo(LIST l, TASK t){
@@ -350,3 +329,17 @@ void printDoing(LIST l){
     }
 }
 
+void dispLists(LIST l1,LIST l2,LIST l3){
+    LIST temp1 = l1;
+    LIST temp2 = l2;
+    LIST temp3 = l3;
+    temp1=temp1->next;
+    temp2=temp2->next;
+    temp3=temp3->next;
+    while(temp1 || temp2 || temp3){
+        printf(" %s\n",temp1->task.name);
+        temp1=temp1->next;
+        temp2=temp2->next;
+        temp3=temp3->next;
+    }
+}
