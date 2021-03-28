@@ -16,19 +16,20 @@
 	<stdio.h>
 	<string.h>
 
-1616059154 source:c:\users\grand\documents\fac\2 semestre\lp\kabanproject\labprogp1\list.c
+1616775752 source:c:\users\grand\documents\fac\2 semestre\lp\kabanproject\labprogp1\list.c
 	"list.h"
 	<time.h>
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
 
-1616058670 c:\users\grand\documents\fac\2 semestre\lp\kabanproject\labprogp1\list.h
+1616775517 c:\users\grand\documents\fac\2 semestre\lp\kabanproject\labprogp1\list.h
 
-1616032229 source:c:\users\grand\documents\fac\2 semestre\lp\kabanproject\labprogp1\main.c
+1616778780 source:c:\users\grand\documents\fac\2 semestre\lp\kabanproject\labprogp1\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<stdbool.h>
+	<time.h>
 	"list.h"
 

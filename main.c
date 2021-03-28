@@ -5,6 +5,12 @@
 #include <time.h>
 #include "list.h"
 
+#ifdef _WIN32
+#define CLEAR "cls"
+#else
+#define CLEAR "clear"
+#endif
+
 #define MAX_BUFFER_SIZE 1024
 
 void systemclear();
@@ -20,7 +26,7 @@ LIST lToDo,lDoing,lDone;
 int id;
 
 void systemclear() {
-	system("clear");
+	system(CLEAR);
 	printf("Quadro de KanBan\n\n");
 }
 
