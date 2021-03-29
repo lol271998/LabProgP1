@@ -211,12 +211,10 @@ void menu() {
 
 
 void addToDoInterface() {
-    systemclear();
     int flag = 0;
     char *sel = malloc(sizeof(char)*MAX_BUFFER_SIZE);
-
     while(flag != 1) {
-
+        systemclear();
         char* tname = malloc(sizeof(char)*MAX_BUFFER_SIZE);
 
         printf("+------------------------------------+\n");
@@ -227,6 +225,8 @@ void addToDoInterface() {
         printf("+------------------------------------+\n");
 
         scanf(" %s",tname);
+        systemclear();
+
         if(strlen(tname) == 1) {
             if(tname[0] == 'q') return;
         }
@@ -234,6 +234,8 @@ void addToDoInterface() {
             free(tname);
             free(sel);
             flag = 1;
+            systemclear();
+            return;
         }
         else {
 
@@ -242,20 +244,21 @@ void addToDoInterface() {
             struct tm* current_time;
             s = time(NULL);
             current_time = localtime(&s);
+            systemclear();
+            printf("+------------------------------------+\n");
+            printf("| Introduza a prioridade             |\n");
+            printf("+------------------------------------+\n");
 
-            while(p == -1) {
-                printf("+------------------------------------+\n");
-                printf("| Introduza a prioridade             |\n");
-                printf("+------------------------------------+\n");
+            scanf(" %d",&p);
 
-                scanf(" %d",&p);
-                //Entra em loop
-                if(p<1 || p>10) {
-                    printf("+------------------------------------+\n");
-                    printf("| Introduza um valor entre 1 e 10    |\n");
-                    printf("+------------------------------------+\n");
-                }
+            while(p<1 || p>10) {
+                systemclear();
+                printf("+------------------------------------+\n");
+                printf("| Introduza um valor entre 1 e 10    |\n");
+                printf("+------------------------------------+\n");
+                scanf("%d",&p);
             }
+
             DATE d;
             d.day = current_time->tm_mday;
             d.month = current_time->tm_mon+1;
@@ -269,13 +272,13 @@ void addToDoInterface() {
 }
 
 void toDo2Doing() {
+
     systemclear();
     int flag = 0;
-    char *sel = malloc(sizeof(char)*MAX_BUFFER_SIZE);
 
     while(flag != 1) {
 
-        char* ind = malloc(sizeof(char)*MAX_BUFFER_SIZE);
+        char *ind = malloc(sizeof(char)*MAX_BUFFER_SIZE);
 
         printf("+---------------------------------------------------------------+\n");
         printf("| Escolha a tarefa que quer passar de toDo para Doing           |\n");
@@ -286,12 +289,11 @@ void toDo2Doing() {
 
         printToDo(lToDo);
 
-        scanf(" %s",&ind);
-
+        scanf(" %s",ind);
         if(strcmp("prev",ind)==0) {
-            free(sel);
-            free(sel);
+            free(ind);
             flag = 1;
+            return;
         }
         if(strlen(ind) == 1) {
             if(ind[0] == 'q') return; //exit
@@ -345,45 +347,53 @@ void func(int n) {
             printf("%s",sel);
 			switch(sel[0]) {
 				case '1':
-                    free(sel);
+                    systemclear();
 					addToDoInterface();
 					error = 0;
 					break;
 				case '2':
+                    systemclear();
                     toDo2Doing();
 					error = 0;
 					break;
 				case '3':
+                    systemclear();
 					//change_owner();
 					error = 0;
 					break;
 				case '4':
+                    systemclear();
 					//Doing2Done();
 					error = 0;
 					break;
 				case '5':
+                    systemclear();
 					//Done2Do();
 					error = 0;
 					break;
 				case '6':
+                    systemclear();
 					//print_table();
 					error = 0;
 					break;
 				case '7':
+                    systemclear();
 					//print_taskOwned();
 					error = 0;
 					break;
 				case '8':
+                    systemclear();
 					//print_by_date();
 					error = 0;
 					break;
 				case 'h': case 'H':
+                    systemclear();
 					print_help();
 					error = 1;
 					break;
                 //Quer guardar o trabalho ? Novo ou já existente
 				case 'q': case 'Q':
-                    free(sel);
+                    systemclear();
 					error = -1;
 					break;
 				default:
@@ -391,6 +401,7 @@ void func(int n) {
 			}
 		}
 	}
+	free(sel);
 }
 
 //Fazer uma função que prepare o ambiente para testing, isto é, mover ficheiros, para temp ou saves, consoante o teste
