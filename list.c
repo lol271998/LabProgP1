@@ -214,12 +214,12 @@ void addToDo(LIST l, TASK t){
 */
 
 TASK findTask(LIST l,int ind) {
-    TASK tnull = createTASK(dNULL(),-1,-1,NULL);
+    TASK tnull = createTASK(dNULL(),"",-1,-1);
     LIST temp = l;
     temp = temp->next;
     int i = 1;
     while(temp){
-        if(i == temp) return temp->task;
+        if(i == ind) return temp->task;
         temp=temp->next;
         i++;
     }
@@ -234,7 +234,7 @@ TASK findTask(LIST l,int ind) {
 */
 
 void removeTask(LIST l, TASK t) {
-    TASK tnull = createTASK(dNULL(),-1,-1,NULL);
+    TASK tnull = createTASK(dNULL(),"",-1,-1);
     LIST cur, prev;
     cur = l;
     prev = l;
@@ -243,7 +243,7 @@ void removeTask(LIST l, TASK t) {
     if(cur->task.id == t.id) {
         prev->next = cur->next;
         //printf("removedFirst\n");
-        return t;
+        return;
     }
 
     prev = prev->next;
