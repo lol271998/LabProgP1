@@ -169,7 +169,6 @@ void addDoing(LIST l, TASK t){
 
 //Ordenado por data de conclusão (task.dEnd)
 void addDone (LIST l, TASK t) {
-
     LIST cur,prev;
     cur = l;
     prev = l;
@@ -197,7 +196,6 @@ void addDone (LIST l, TASK t) {
         prev->next = node;
         node->next = NULL;
     }
-
 }
 
 /**
@@ -270,14 +268,9 @@ void removeTask(LIST l, TASK t) {
 *
 */
 
-void printDone(LIST l) {
-    LIST temp = l;
-    temp = temp->next;
-    while(temp) {
-        printDate(temp->task.dEnd);
-        printf("\n");
-        temp=temp->next;
-    }
+void printDate(DATE d) {
+    if(d.day == -1 && d.month == -1 && d.year == -1) printf("N/A")
+    printf("%d/%d/%d",d.day,d.month,d.year);
 }
 
 void printToDo(LIST l) {
@@ -290,6 +283,7 @@ void printToDo(LIST l) {
         printf("%d. Nome: %s\n",i,temp->task.name);
         printf("   id: %d\n",temp->task.id);
         printf("   prioridade: %d\n",temp->task.priority);
+        printf("   Data de inicio: "); printDate(temp->task.dStart);
         printf("\n \n");
         i++;
         temp = temp->next;
@@ -298,16 +292,40 @@ void printToDo(LIST l) {
 
 }
 
-void printDate(DATE d) {
-    printf("%d/%d/%d",d.day,d.month,d.year);
-}
-
 void printDoing(LIST l){
     LIST temp = l;
     temp = temp->next;
-    while(temp){
-        printf("%s\n",temp->task.name);
-        temp=temp->next;
+    int i = 1;
+    while(temp) {
+        printf("\n \n");
+        printf("%d. Nome: %s\n",i,temp->task.name);
+        printf("   id: %d\n",temp->task.id);
+        printf("   prioridade: %d\n",temp->task.priority);
+        printf("   Dono: %s\n",temp->task.owner);
+        printf("   Data de inicio: "); printDate(temp->task.dStart);
+        printf("   Data limite: "); printDate(temp->task.deadLine);
+        printf("\n \n");
+        i++;
+        temp = temp->next;
+    }
+}
+
+void printDone(LIST l){
+    LIST temp = l;
+    temp = temp->next;
+    int i = 1;
+    while(temp) {
+        printf("\n \n");
+        printf("%d. Nome: %s\n",i,temp->task.name);
+        printf("   id: %d\n",temp->task.id);
+        printf("   prioridade: %d\n",temp->task.priority);
+        printf("   Dono: %s\n",temp->task.owner);
+        printf("   Data de inicio: "); printDate(temp->task.dStart);
+        printf("   Data limite: "); printDate(temp->task.deadLine);
+        printf("   Data de conclusão: "); printDate(temp->task.dEnd);
+        printf("\n \n");
+        i++;
+        temp = temp->next;
     }
 }
 

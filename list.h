@@ -32,13 +32,24 @@ TASK createTASK(DATE d, char* name, int id, int p); //Done
 
 LIST createList(); //Done
 DATE dateNULL();
-
+/**
+*
+* Funções do main
+*
+*/
 void addToDoInterface(); //Data de sistema
+void toDo2Doing();
+void Doing2Done();
+
+int compareDate(DATE d1, DATE d2);
+int compareToDone(TASK t1, TASK t2);
+int compareToDo(TASK t1,TASK t2);
 
 void addToDo(LIST l, TASK t); //Done
 void addDoing(LIST l, TASK t);//Done
 void addDone(LIST l, TASK t); //Done
 
+void printToDo(LIST l); //Done
 void printDoing(LIST l);//Done
 void printDone();//Done
 

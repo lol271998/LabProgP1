@@ -24,12 +24,40 @@ void func();
 
 LIST lToDo,lDoing,lDone;
 int id;
+char* fname;
 
 void systemclear() {
 	system(CLEAR);
 	printf("Quadro de KanBan\n\n");
 }
 
+void exit() {
+    char* sel = malloc(sizeof(char)*MAX_BUFFER_SIZE);
+    int flag = 0;
+
+    printf("+------------------------------------------+\n");
+	printf("| Quer guardar o ficheiro ?                |\n");
+	printf("| s para sim, n para não                   |\n");
+    printf("+------------------------------------------+\n");
+
+    while(flag != 1) {
+        scanf(" %s",sel);
+
+        if(strlen(sel) > 1) printf("Introduza apenas um caracter \n\n");
+
+        else {
+
+            printf("+------------------------------------------+\n");
+            printf("| Introduza o nome do ficheiro             |\n");
+            printf("+------------------------------------------+\n");
+
+            scanf(" %s",sel);
+
+
+        }
+    }
+
+}
 bool file_exist(const char * filename){
     /* try to open file to read */
     FILE *file;
@@ -41,10 +69,7 @@ bool file_exist(const char * filename){
 }
 
 /*
-*
-*
 * Abre um ficheiro existente para leitura de dados
-*
 */
 void existing_table() {
 
@@ -147,12 +172,9 @@ void new_table(char* path) {
 
 }
 
-
 /*
-*
 * Texto de ajuda, como funciona o programa, como deve ser o input dos ficheiros.
 * Quando ativado volta ao menu incial.
-*
 */
 void print_help() {
 	systemclear();
@@ -248,7 +270,7 @@ void addToDoInterface() {
             printf("+------------------------------------+\n");
             printf("| Introduza a prioridade             |\n");
             printf("+------------------------------------+\n");
-
+            //bug se for letra
             scanf(" %d",&p);
 
             while(p<1 || p>10) {
@@ -274,6 +296,14 @@ void addToDoInterface() {
 void toDo2Doing() {
 
     systemclear();
+
+    if(size(lToDo) == 0) {
+        printf("+-------------------------------------------------------------------------+\n");
+        printf("| Ainda não existem tarefas em toDo que possam ser adicionadas a Doing    |\n");
+        printf("+-------------------------------------------------------------------------+\n");
+        return;
+    }
+
     int flag = 0;
 
     while(flag != 1) {
@@ -296,92 +326,94 @@ void toDo2Doing() {
             flag = 1;
             return;
         }
-        if(strlen(ind) == 1) {
-            if(ind[0] == 'q') return; //exit
-            else {
-                int c = ind[0]-'0';
-                TASK temp = findTask(lToDo,c);
-                if(temp.id != -1) {
-                    systemclear();
-                    temp.owner = malloc(sizeof(char)*MAX_BUFFER_SIZE);
-                    removeTask(lToDo,temp);
-
-                    printf("+------------------------------+\n");
-                    printf("| Introduza o dono da tarefa   |\n");
-                    printf("+------------------------------+\n");
-
-                    scanf(" %s",temp.owner);
-
-                    systemclear();
-
-                    printf("+------------------------------+\n");
-                    printf("| Introduza a data limite      |\n");
-                    printf("+------------------------------+\n");
-                    int error = 0;
-
-                    while(error != 1) {
-                        DATE d1,d2;
-                        time_t s;
-                        struct tm* current_time;
-                        s = time(NULL);
-                        current_time = localtime(&s);
-
-                        d1.day = current_time->tm_mday;
-                        d1.month = current_time->tm_mon+1;
-                        d1.year = current_time->tm_year + 1900;
-
-                        printf("dia: ");
-                        scanf("%d",&d2.day);
-                        printf("mês: ");
-                        scanf("%d",&d2.month);
-                        printf("ano: ");
-                        scanf("%d",&d2.year);
-
-                        if(compareDate(d1,d2) == 1) {
-                            systemclear();
-                            printf("+--------------------------------+\n");
-                            printf("| Introduza uma data válida!     |\n");
-                            printf("+--------------------------------+\n");
-                        }
-                        else {
-                            error = 1;
-                            temp.deadLine = d2;
-                        }
-                    }
-                    systemclear();
-
-                    addDoing(lDone,temp);
-
-                    printf("+--------------------------------------------+\n");
-                    printf("| Tarefa adicionada a Doing com sucesso!     |\n");
-                    printf("+--------------------------------------------+\n");
-
-                    flag = 1;
-                }
-                else {
-                    printf("A tarefa que pediu, não existe na lista\n");
-                }
-            }
+        else if(strlen(ind) == 1 && ind[0] == 'q') {
+            return; //exit
         }
         else {
-            printf("Introduza apenas um caracter ou prev\n");
+            int c = atoi(ind);
+            TASK temp = findTask(lToDo,c);
+            if(temp.id != -1) {
+                systemclear();
+                temp.owner = malloc(sizeof(char)*MAX_BUFFER_SIZE);
+                removeTask(lToDo,temp);
+
+                printf("+------------------------------+\n");
+                printf("| Introduza o dono da tarefa   |\n");
+                printf("+------------------------------+\n");
+
+                scanf(" %s",temp.owner);
+
+                systemclear();
+
+                printf("+------------------------------+\n");
+                printf("| Introduza a data limite      |\n");
+                printf("+------------------------------+\n");
+                int error = 0;
+                while(error != 1) {
+
+                    DATE d1,d2;
+                    time_t s;
+                    struct tm* current_time;
+                    s = time(NULL);
+                    current_time = localtime(&s);
+
+                    d1.day = current_time->tm_mday;
+                    d1.month = current_time->tm_mon+1;
+                    d1.year = current_time->tm_year + 1900;
+
+                    printf("dia: ");
+                    scanf("%d",&d2.day);
+                    printf("mês: ");
+                    scanf("%d",&d2.month);
+                    printf("ano: ");
+                    scanf("%d",&d2.year);
+
+                    if(compareDate(d1,d2) == 1) {
+                        systemclear();
+                        printf("+--------------------------------+\n");
+                        printf("| Introduza uma data válida!     |\n");
+                        printf("+--------------------------------+\n");
+                    }
+                    else {
+                        error = 1;
+                        temp.deadLine = d2;
+                    }
+                }
+                systemclear();
+                addDoing(lDoing,temp);
+
+                printf("+--------------------------------------------+\n");
+                printf("| Tarefa adicionada a Doing com sucesso!     |\n");
+                printf("+--------------------------------------------+\n");
+
+                flag = 1;
+           }
+           else {
+                systemclear();
+                printf("+--------------------------------------------+\n");
+                printf("| A tarefa que pediu, não existe na lista    |\n");
+                printf("+--------------------------------------------+\n");
+            }
         }
-
     }
-
 }
 
 void doing2Done () {
 
     systemclear();
     int flag = 0;
-
+    if(size(lDoing) == 0) {
+        printf("+-------------------------------------------------------------------------+\n");
+        printf("| Ainda não existem tarefas em Doing que possam ser adicionadas a Done    |\n");
+        printf("+-------------------------------------------------------------------------+\n");
+        return;
+    }
     while(flag != 1) {
 
         char *ind = malloc(sizeof(char)*MAX_BUFFER_SIZE);
 
         printf("+---------------------------------------------------------------+\n");
-        printf("| Escolha a tarefa que quer passar de Doing para Done           |\n");
+        printf("| Escolha a tarefa que quer terminar                            |\n");
         printf("| prev para voltar atrás                                        |\n");
         printf("| q para sair                                                   |\n");
         printf("| h para ajuda                                                  |\n");
@@ -396,33 +428,111 @@ void doing2Done () {
             flag = 1;
             return;
         }
-        if(strlen(ind) == 1) {
-            if(ind[0] == 'q') return; //exit
+        if(strlen(ind) == 1 && ind[0] == 'q') {
+            return; //exit
+        }
+        else {
+            int c = atoi(ind);
+            TASK temp = findTask(lDoing,c);
+            if(temp.id != -1) {
+                systemclear();
+                removeTask(lDoing,temp);
+
+                DATE d;
+                time_t s;
+                struct tm* current_time;
+                s = time(NULL);
+                current_time = localtime(&s);
+
+                d.day = current_time->tm_mday;
+                d.month = current_time->tm_mon+1;
+                d.year = current_time->tm_year + 1900;
+                temp.dEnd = d;
+                systemclear();
+
+                addDone(lDone,temp);
+
+                printf("+--------------------------------------------+\n");
+                printf("| Tarefa adicionada a Done com sucesso!      |\n");
+                printf("+--------------------------------------------+\n");
+                flag = 1;
+            }
             else {
-                int c = ind[0]-'0';
-                TASK temp = findTask(lDoing,c);
-                if(temp.id != -1) {
-                    systemclear();
-                    removeTask(lDoing,temp);
-
-                        DATE d;
-                        time_t s;
-                        struct tm* current_time;
-                        s = time(NULL);
-                        current_time = localtime(&s);
-
-                        d.day = current_time->tm_mday;
-                        d.month = current_time->tm_mon+1;
-                        d.year = current_time->tm_year + 1900;
-                        temp.dEnd = d;
-                }
+                printf("+--------------------------------------------+\n");
+                printf("| A tarefa que pediu, não existe na lista    |\n");
+                printf("+--------------------------------------------+\n");
             }
         }
-        printf("+--------------------------------------------+\n");
-        printf("| Tarefa adicionada a Doing com sucesso!     |\n");
-        printf("+--------------------------------------------+\n");
     }
 }
+
+void done2Doing() {
+systemclear();
+    int flag = 0;
+    if(size(lDoing) == 0) {
+        printf("+-------------------------------------------------------------------------+\n");
+        printf("| Ainda não existem tarefas em Done que possam ser reabertas              |\n");
+        printf("+-------------------------------------------------------------------------+\n");
+        return;
+    }
+    while(flag != 1) {
+
+        char *ind = malloc(sizeof(char)*MAX_BUFFER_SIZE);
+
+        printf("+---------------------------------------------------------------+\n");
+        printf("| Escolha a tarefa que quer reabrir                             |\n");
+        printf("| prev para voltar atrás                                        |\n");
+        printf("| q para sair                                                   |\n");
+        printf("| h para ajuda                                                  |\n");
+        printf("+---------------------------------------------------------------+\n");
+
+        printDone(lDone);
+
+        scanf(" %s",ind);
+
+        if(strcmp("prev",ind)==0) {
+            free(ind);
+            flag = 1;
+            return;
+        }
+        if(strlen(ind) == 1 && ind[0] == 'q') {
+            return; //exit
+        }
+        else {
+            int c = atoi(ind);
+            TASK temp = findTask(lDone,c);
+            if(temp.id != -1) {
+                systemclear();
+                removeTask(lDone,temp);
+
+                DATE d;
+                time_t s;
+                struct tm* current_time;
+                s = time(NULL);
+                current_time = localtime(&s);
+
+                d.day = -1;
+                d.month = -1;
+                d.year = -1;
+                temp.dEnd = d;
+                systemclear();
+
+                add(lDoing,temp);
+
+                printf("+--------------------------------------------+\n");
+                printf("| Tarefa adicionada a Doing com sucesso!     |\n");
+                printf("+--------------------------------------------+\n");
+                flag = 1;
+            }
+            else {
+                printf("+--------------------------------------------+\n");
+                printf("| A tarefa que pediu, não existe na lista    |\n");
+                printf("+--------------------------------------------+\n");
+            }
+        }
+    }
+}
+
 //0 -> existing file
 //1 -> new file
 void func(int n) {
@@ -469,7 +579,7 @@ void func(int n) {
 					break;
 				case '4':
                     systemclear();
-                    //done2Do();
+                    done2Do();
 					error = 0;
 					break;
 				case '5':
@@ -511,7 +621,6 @@ void func(int n) {
 }
 
 //Fazer uma função que prepare o ambiente para testing, isto é, mover ficheiros, para temp ou saves, consoante o teste
-
 int main(int argc, char const *argv[]) {
 
  	systemclear();
