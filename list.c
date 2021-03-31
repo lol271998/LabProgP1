@@ -235,7 +235,6 @@ void removeTask(LIST l, TASK t) {
     cur = cur->next;
     if(cur->task.id == t.id) {
         prev->next = cur->next;
-        //printf("removedFirst\n");
         return;
     }
 
@@ -245,23 +244,13 @@ void removeTask(LIST l, TASK t) {
     while(cur->next != NULL) {
         if(cur->task.id == t.id) {
             prev->next = cur->next;
-            /*
-            printf("\nprev: %s\n\n",prev->task.name);
-            printf("\ncur: %s\n\n",cur->task.name);
-            */
             return;
         }
         else {
-            /*
-            printf("\nprev: %s\n\n",prev->task.name);
-            printf("\ncur: %s\n\n",cur->task.name);
-            */
             prev = prev->next;
             cur = cur->next;
         }
     }
-
-    //printf("\nprev: %s\n\n",prev->task.name);
 
     if(cur->task.id == t.id) {
         prev->next = cur->next;

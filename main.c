@@ -150,7 +150,7 @@ void new_table(char* path) {
 
 /*
 *
-* texto de ajuda, como funciona o programa, como deve ser o input dos ficheiros.
+* Texto de ajuda, como funciona o programa, como deve ser o input dos ficheiros.
 * Quando ativado volta ao menu incial.
 *
 */
@@ -209,7 +209,6 @@ void menu() {
 	}
 	return;
 }
-
 
 void addToDoInterface() {
     int flag = 0;
@@ -372,6 +371,58 @@ void toDo2Doing() {
 
 }
 
+void doing2Done () {
+
+    systemclear();
+    int flag = 0;
+
+    while(flag != 1) {
+
+        char *ind = malloc(sizeof(char)*MAX_BUFFER_SIZE);
+
+        printf("+---------------------------------------------------------------+\n");
+        printf("| Escolha a tarefa que quer passar de Doing para Done           |\n");
+        printf("| prev para voltar atrás                                        |\n");
+        printf("| q para sair                                                   |\n");
+        printf("| h para ajuda                                                  |\n");
+        printf("+---------------------------------------------------------------+\n");
+
+        printDoing(lDoing);
+
+        scanf(" %s",ind);
+
+        if(strcmp("prev",ind)==0) {
+            free(ind);
+            flag = 1;
+            return;
+        }
+        if(strlen(ind) == 1) {
+            if(ind[0] == 'q') return; //exit
+            else {
+                int c = ind[0]-'0';
+                TASK temp = findTask(lDoing,c);
+                if(temp.id != -1) {
+                    systemclear();
+                    removeTask(lDoing,temp);
+
+                        DATE d;
+                        time_t s;
+                        struct tm* current_time;
+                        s = time(NULL);
+                        current_time = localtime(&s);
+
+                        d.day = current_time->tm_mday;
+                        d.month = current_time->tm_mon+1;
+                        d.year = current_time->tm_year + 1900;
+                        temp.dEnd = d;
+                }
+            }
+        }
+        printf("+--------------------------------------------+\n");
+        printf("| Tarefa adicionada a Doing com sucesso!     |\n");
+        printf("+--------------------------------------------+\n");
+    }
+}
 //0 -> existing file
 //1 -> new file
 void func(int n) {
@@ -413,17 +464,17 @@ void func(int n) {
 					break;
 				case '3':
                     systemclear();
-					//change_owner();
+					doing2Done();
 					error = 0;
 					break;
 				case '4':
                     systemclear();
-					//Doing2Done();
+                    //done2Do();
 					error = 0;
 					break;
 				case '5':
                     systemclear();
-					//Done2Do();
+                    //change_owner();
 					error = 0;
 					break;
 				case '6':
