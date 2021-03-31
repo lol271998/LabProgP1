@@ -39,6 +39,7 @@ bool file_exist(const char * filename){
     }
     return false;
 }
+
 /*
 *
 *
@@ -240,7 +241,7 @@ void addToDoInterface() {
         else {
 
             int p = -1;
-            time_t s, val = 1;
+            time_t s;
             struct tm* current_time;
             s = time(NULL);
             current_time = localtime(&s);
@@ -290,6 +291,7 @@ void toDo2Doing() {
         printToDo(lToDo);
 
         scanf(" %s",ind);
+
         if(strcmp("prev",ind)==0) {
             free(ind);
             flag = 1;
@@ -298,10 +300,63 @@ void toDo2Doing() {
         if(strlen(ind) == 1) {
             if(ind[0] == 'q') return; //exit
             else {
-                TASK temp = findTask(lToDo,(int)ind[0]);
+                int c = ind[0]-'0';
+                TASK temp = findTask(lToDo,c);
                 if(temp.id != -1) {
+                    systemclear();
+                    temp.owner = malloc(sizeof(char)*MAX_BUFFER_SIZE);
                     removeTask(lToDo,temp);
+
+                    printf("+------------------------------+\n");
+                    printf("| Introduza o dono da tarefa   |\n");
+                    printf("+------------------------------+\n");
+
+                    scanf(" %s",temp.owner);
+
+                    systemclear();
+
+                    printf("+------------------------------+\n");
+                    printf("| Introduza a data limite      |\n");
+                    printf("+------------------------------+\n");
+                    int error = 0;
+
+                    while(error != 1) {
+                        DATE d1,d2;
+                        time_t s;
+                        struct tm* current_time;
+                        s = time(NULL);
+                        current_time = localtime(&s);
+
+                        d1.day = current_time->tm_mday;
+                        d1.month = current_time->tm_mon+1;
+                        d1.year = current_time->tm_year + 1900;
+
+                        printf("dia: ");
+                        scanf("%d",&d2.day);
+                        printf("mês: ");
+                        scanf("%d",&d2.month);
+                        printf("ano: ");
+                        scanf("%d",&d2.year);
+
+                        if(compareDate(d1,d2) == 1) {
+                            systemclear();
+                            printf("+--------------------------------+\n");
+                            printf("| Introduza uma data válida!     |\n");
+                            printf("+--------------------------------+\n");
+                        }
+                        else {
+                            error = 1;
+                            temp.deadLine = d2;
+                        }
+                    }
+                    systemclear();
+
                     addDoing(lDone,temp);
+
+                    printf("+--------------------------------------------+\n");
+                    printf("| Tarefa adicionada a Doing com sucesso!     |\n");
+                    printf("+--------------------------------------------+\n");
+
                     flag = 1;
                 }
                 else {

@@ -16,7 +16,7 @@ DATE dNULL() {
 /**
 *
 * Quando passamos de tabela para tabela não esquecer de:
-* - Atribuir dono (Doint)
+* - Atribuir dono (Doing)
 * - Atribuir Data limite (Doing)
 * - Atribuir data de conclusão (Done)
 *
@@ -116,47 +116,33 @@ int compareToDone(TASK t1, TASK t2) {
 int compareToDo(TASK t1,TASK t2){
     return compareDate(t1.dStart,t2.dStart);
 }
-/*
-void DoneSearch(LISTA l, DATE d, LISTA *prev, LIST *cur) {
-    *prev = l;
-    *cur = l->next;
 
-    while((*cur) != NULL && (*actual))
+
+
+void auxToDo(LIST lista, TASK t,LIST *ant,LIST *atual){
+    *ant=lista;
+    *atual=lista->next;
+    while ((*atual) != NULL && ( (*atual)->task.priority>t.priority ) ){
+        *ant = *atual;
+        *atual = (*atual)->next;
+    }
+    while ((*atual) != NULL &&  (compareToDo((*atual)->task,t ))>=-1 ){
+        *ant = *atual;
+        *atual = (*atual)->next;
+    }
 }
-*/
 
-//Ordenado por data de conclusão (task.dEnd)
-void addDone (LIST l, TASK t) {
-
-    LIST cur,prev;
-    cur = l;
-    prev = l;
-
-    LIST node = (LIST) malloc (sizeof(List_node));
-    node->task = t;
-
-    if(cur->next == NULL) {
-        node->next = NULL;
-        cur->next = node;
+//Ordenado por prioridade e depois data de ciraçao (task.priority) (task.dStart)
+void addToDo(LIST l, TASK t){
+    LIST node;
+    LIST ant,inut;
+    node = (LIST) malloc (sizeof(List_node));
+    if(node!=NULL){
+        node->task = t;
+        auxToDo(l,t,&ant,&inut);
+        node->next = ant->next;
+        ant->next = node;
     }
-
-    else {
-        cur = cur->next;
-        while(cur != NULL) {
-            if(compareToDone(cur->task,t)>=1) {
-                prev->next = node;
-                node->next = cur;
-                return;
-            }
-            else {
-                cur = cur->next;
-                prev = prev->next;
-            }
-        }
-        prev->next = node;
-        node->next = NULL;
-    }
-
 }
 
 void auxDoing(LIST lista,TASK t,LIST *ant,LIST *atual){
@@ -181,29 +167,37 @@ void addDoing(LIST l, TASK t){
     }
 }
 
-void auxToDo(LIST lista, TASK t,LIST *ant,LIST *atual){
-    *ant=lista;
-    *atual=lista->next;
-    while ((*atual) != NULL && ( (*atual)->task.priority>t.priority ) ){
-        *ant = *atual;
-        *atual = (*atual)->next;
+//Ordenado por data de conclusão (task.dEnd)
+void addDone (LIST l, TASK t) {
+
+    LIST cur,prev;
+    cur = l;
+    prev = l;
+
+    LIST node = (LIST) malloc (sizeof(List_node));
+    node->task = t;
+
+    if(cur->next == NULL) {
+        node->next = NULL;
+        cur->next = node;
     }
-    while ((*atual) != NULL &&  (compareToDo((*atual)->task,t ))>=-1 ){
-        *ant = *atual;
-        *atual = (*atual)->next;
+    else {
+        cur = cur->next;
+        while(cur != NULL) {
+            if(compareToDone(cur->task,t)>=1) {
+                prev->next = node;
+                node->next = cur;
+                return;
+            }
+            else {
+                cur = cur->next;
+                prev = prev->next;
+            }
+        }
+        prev->next = node;
+        node->next = NULL;
     }
-}
-//Ordenado por prioridade e depois data de ciraçao (task.priority) (task.dStart)
-void addToDo(LIST l, TASK t){
-    LIST node;
-    LIST ant,inut;
-    node = (LIST) malloc (sizeof(List_node));
-    if(node!=NULL){
-        node->task = t;
-        auxToDo(l,t,&ant,&inut);
-        node->next = ant->next;
-        ant->next = node;
-    }
+
 }
 
 /**
@@ -213,7 +207,7 @@ void addToDo(LIST l, TASK t){
 *
 */
 
-TASK findTask(LIST l,int ind) {
+TASK findTask(LIST l, int ind) {
     TASK tnull = createTASK(dNULL(),"",-1,-1);
     LIST temp = l;
     temp = temp->next;
@@ -234,7 +228,6 @@ TASK findTask(LIST l,int ind) {
 */
 
 void removeTask(LIST l, TASK t) {
-    TASK tnull = createTASK(dNULL(),"",-1,-1);
     LIST cur, prev;
     cur = l;
     prev = l;
