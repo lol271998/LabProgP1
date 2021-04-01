@@ -269,7 +269,7 @@ void removeTask(LIST l, TASK t) {
 */
 
 void printDate(DATE d) {
-    if(d.day == -1 && d.month == -1 && d.year == -1) printf("N/A")
+    if(d.day == -1 && d.month == -1 && d.year == -1) printf("N/A");
     printf("%d/%d/%d",d.day,d.month,d.year);
 }
 
