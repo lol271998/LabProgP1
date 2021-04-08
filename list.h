@@ -14,7 +14,7 @@ struct task {
     char name [40]; // NULL se não definido
     int id;         // -1 se não definido
     int priority;   // -1 se não definido
-    char* owner;    // NULL se não definido
+    char owner[40];    // NULL se não definido
     DATE dStart;    // (0,0,0) se não definida
     DATE deadLine;  // (0,0,0) se não definida
     DATE dEnd;      // (0,0,0) se não definida

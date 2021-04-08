@@ -50,7 +50,7 @@ bool file_exist(const char * filename){
 */
 void save(char* user_fname) {
 
-    if(strcmp(user_fname,"temp->txt") != 0){
+    if(strcmp(user_fname,"temp.txt") != 0){
         fname = malloc(sizeof(char)*strlen(user_fname));
         strcpy(fname,user_fname);
         strcat(fname,".txt");
@@ -100,6 +100,7 @@ void save(char* user_fname) {
             temp = temp->next;
         }
     }
+    free(temp);
     fclose(fp);
 }
 
@@ -132,11 +133,23 @@ void user_exit() {
 
             scanf(" %s",user_fname);
             save(user_fname);
+            printToDo(lToDo);
+            printDoing(lDoing);
+            printDone(lDone);
+            free(lToDo);
+            free(lDoing);
+            free(lDone);
             exit(0);
         }
         else {
             free(sel);
             remove(fname);
+            printToDo(lToDo);
+            printDoing(lDoing);
+            printDone(lDone);
+            free(lToDo);
+            free(lDoing);
+            free(lDone);
             exit(0);
         }
     }
@@ -197,6 +210,7 @@ void existing_table() {
                     addToDo(lToDo,temp);
                 }
 
+                //AddDoing
                 getline(&line,&buffsize,file);
                 n = atoi(line);
 
@@ -207,8 +221,8 @@ void existing_table() {
                     strcpy(linearray,line);
 
                     strcpy(temp.name,strtok(linearray,sep));
-                    temp.owner = strtok(NULL,sep);
-                    temp.id= atoi(strtok(NULL,sep));
+                    strcpy(temp.owner,strtok(NULL,sep));
+                    temp.id = atoi(strtok(NULL,sep));
                     temp.priority = atoi(strtok(NULL,sep));
 
                     getline(&line,&buffsize,file);
@@ -220,7 +234,7 @@ void existing_table() {
                     temp.dStart.year = atoi(strtok(NULL," "));
 
                     getline(&line,&buffsize,file);
-                    date[strlen(line)];
+                    date[strlen(line)]; //O tamanho da line pode mudar
                     strcpy(date,line);
 
                     temp.deadLine.day = atoi(strtok(date," "));
@@ -240,7 +254,7 @@ void existing_table() {
                     strcpy(linearray,line);
 
                     strcpy(temp.name,strtok(linearray,sep));
-                    temp.owner = strtok(NULL,sep);
+                    strcpy(temp.owner,strtok(NULL,sep));
                     temp.id= atoi(strtok(NULL,sep));
                     temp.priority = atoi(strtok(NULL,sep));
 
@@ -253,7 +267,7 @@ void existing_table() {
                     temp.dStart.year = atoi(strtok(NULL," "));
 
                     getline(&line,&buffsize,file);
-                    date[strlen(line)];
+                    date[strlen(line)]; //O tamanho da line pode mudar
                     strcpy(date,line);
 
                     temp.deadLine.day = atoi(strtok(date," "));
@@ -261,7 +275,7 @@ void existing_table() {
                     temp.deadLine.year = atoi(strtok(NULL," "));
 
                     getline(&line,&buffsize,file);
-                    date[strlen(line)];
+                    date[strlen(line)]; //O tamanho da line pode mudar
                     strcpy(date,line);
 
                     temp.dEnd.day = atoi(strtok(date," "));
@@ -336,10 +350,7 @@ void print_help() {
 */
 void menu() {
 
-	char* sel = malloc(sizeof(char)*MAX_BUFFER_SIZE);
-	int error = 1;
-
-	while(error!=0) {
+	while(1) {
 
 		printf("+--------------------------------------------------------------+\n");
 		printf("| 1. Criar um novo quadro                                      |\n");
@@ -347,33 +358,62 @@ void menu() {
 		printf("| h for help, q for quit                                       |\n");
 		printf("+--------------------------------------------------------------+\n");
 
-		scanf(" %s",sel);
+        char* sel = malloc(sizeof(char)*MAX_BUFFER_SIZE);
+		fgets(sel,MAX_BUFFER_SIZE,stdin);
 
-		systemclear();
+        if(sel[0] == '\n'){
+            systemclear();
+            continue;
+        }
 
-		if(strlen(sel) > 1) printf("Introduza apenas um caracter\n\n");
-		else{
-			switch(sel[0]) {
-				case '1':
+        strtok(sel, "\n");
+        systemclear();
+
+        if(strlen(sel) == 1) {
+            switch(sel[0]){
+                case '1':
                     free(sel);
-                    fname = "temp->txt";
+                    fname = "temp.txt";
 					func();
-					error = 0;
 					break;
 				case '2':
                     free(sel);
 					existing_table();
 					func();
-					error = 0;
 					break;
-				case 'h': case 'H':
+                case 'q':
                     free(sel);
-					print_help();
-					error = 1;
+                    user_exit();
+                    break;
+				default:
+					printf("Error: Escolha uma opção válida\n\n");
+            }
+        }
+        else if(strcmp("prev",sel)==0) {
+            free(sel);
+            systemclear();
+            menu();
+        }
+
+		else if(strlen(sel) > 1){
+            printf("+--------------------------------------------------------------+\n");
+            printf("| Introduza apenas um caracter                                 |\n");
+            printf("+--------------------------------------------------------------+\n");
+            free(sel);
+            continue;
+        }
+		else{
+			switch(sel[0]) {
+				case '1':
+                    free(sel);
+                    fname = "temp.txt";
+					func();
 					break;
-				case 'q': case 'Q':
+				case '2':
                     free(sel);
-					return;
+					existing_table();
+					func();
+					break;
 				default:
 					printf("Error: Escolha uma opção válida\n\n");
 			}
@@ -383,12 +423,9 @@ void menu() {
 }
 
 /*
-* Adiciona tarefas à lista toDo
+* Adiciona tarefas à lista toDo (check)
 */
 void addToDoInterface() {
-    //flush inputbuffer
-    int c;
-    while((c = getchar()) != '\n' && c != EOF);
 
     int count = 0;
     while(1) {
@@ -429,18 +466,34 @@ void addToDoInterface() {
             s = time(NULL);
             current_time = localtime(&s);
             systemclear();
+
             printf("+------------------------------------+\n");
             printf("| Introduza a prioridade             |\n");
             printf("+------------------------------------+\n");
-            //bug se for letra
-            scanf(" %d",&p);
 
-            while(p<1 || p>10) {
-                systemclear();
-                printf("+------------------------------------+\n");
-                printf("| Introduza um valor entre 1 e 10    |\n");
-                printf("+------------------------------------+\n");
-                scanf("%d",&p);
+            while(1) {
+                char* in  = malloc(sizeof(char)*MAX_BUFFER_SIZE);
+                fgets(in,MAX_BUFFER_SIZE,stdin);
+
+                if(in[0] == '\n'){
+                    systemclear();
+                    continue;
+                }
+
+                strtok(in, "\n");
+                p = atoi(in);
+
+                if(p<1 || p>10) {
+                    printf("+------------------------------------+\n");
+                    printf("| Introduza um valor entre 1 e 10    |\n");
+                    printf("+------------------------------------+\n");
+                    free(in);
+                    continue;
+                }
+                else{
+                    free(in);
+                    break;
+                }
             }
 
             DATE d;
@@ -493,11 +546,9 @@ int isDateValid(char* d, int t) {
 }
 
 /*
-* Adiciona tarefas da lista toDo->Doing
+* Adiciona tarefas da lista toDo->Doing (check)
 */
 void toDo2Doing() {
-
-    systemclear();
 
     if(size(lToDo) == 0) {
         printf("+-------------------------------------------------------------------------+\n");
@@ -519,37 +570,59 @@ void toDo2Doing() {
 
         printToDo(lToDo);
 
-        scanf(" %s",ind);
+        fgets(ind,MAX_BUFFER_SIZE,stdin);
 
-        if(strcmp("prev",ind)==0) {
-            free(ind);
-            return;
+        if(ind[0] == '\n'){
+            systemclear();
+            continue;
         }
-        else if(strlen(ind) == 1 && ind[0] == 'q') {
+
+        strtok(ind, "\n");
+        systemclear();
+
+        if(strlen(ind) == 1 && ind[0] == 'q') {
+            free(ind);
             user_exit();
+        }
+        else if(strcmp("prev",ind)==0) {
+            free(ind);
+            systemclear();
+            return;
         }
         else {
             int c = atoi(ind);
+            free(ind);
             TASK temp = findTask(lToDo,c);
             if(temp.id!= -1) {
-                systemclear();
-                temp.owner = malloc(sizeof(char)*MAX_BUFFER_SIZE);
                 removeTask(lToDo,temp);
+                systemclear();
 
                 printf("+------------------------------+\n");
                 printf("| Introduza o dono da tarefa   |\n");
                 printf("+------------------------------+\n");
 
-                scanf(" %s",temp.owner);
+                while(1) {
+                    char* owner = malloc(sizeof(char)*MAX_BUFFER_SIZE);
 
-                systemclear();
+                    fgets(owner,MAX_BUFFER_SIZE,stdin);
+
+                    if(owner[0] == '\n'){
+                        systemclear();
+                        continue;
+                    }
+                    else{
+                        strtok(owner, "\n");
+                        strcpy(temp.owner,owner);
+                        systemclear();
+                        break;
+                    }
+                }
 
                 printf("+------------------------------+\n");
                 printf("| Introduza a data limite      |\n");
                 printf("+------------------------------+\n");
 
                 while(1) {
-
                     DATE d1,d2;
                     time_t s;
                     struct tm* current_time;
@@ -603,6 +676,7 @@ void toDo2Doing() {
                         break;
                     }
                 }
+
                 systemclear();
                 addDoing(lDoing,temp);
 
@@ -624,10 +698,10 @@ void toDo2Doing() {
 }
 
 /*
-* Adiciona tarefas da lista Doing->toDo
+* Adiciona tarefas da lista Doing->toDo (check)
 */
-void Doing2ToDo() {
-    systemclear();
+void doing2ToDo() {
+
     if(size(lDoing) == 0) {
         printf("+-------------------------------------------------------------------------+\n");
         printf("| Ainda não existem tarefas em Doing onde o responsável pode ser alterado |\n");
@@ -647,17 +721,28 @@ void Doing2ToDo() {
 
         printDoing(lDoing);
 
-        scanf(" %s",ind);
+        fgets(ind,MAX_BUFFER_SIZE,stdin);
 
-        if(strcmp("prev",ind)==0) {
-            free(ind);
-            return;
+        if(ind[0] == '\n'){
+            systemclear();
+            continue;
         }
+
+        strtok(ind, "\n");
+        systemclear();
+
         if(strlen(ind) == 1 && ind[0] == 'q') {
+            free(ind);
             user_exit();
+        }
+        else if(strcmp("prev",ind)==0) {
+            free(ind);
+            systemclear();
+            return;
         }
         else {
             int c = atoi(ind);
+            free(ind);
             TASK temp = findTask(lDoing,c);
             if(temp.id!= -1) {
                 systemclear();
@@ -669,10 +754,9 @@ void Doing2ToDo() {
                 d.year = -1;
 
                 temp.dEnd = d;
-                temp.owner = NULL;
+                temp.owner[0] = '\0';
 
                 addToDo(lToDo,temp);
-
 
                 break;
             }
@@ -681,7 +765,7 @@ void Doing2ToDo() {
 }
 
 /*
-* Adiciona tarefas da lista Doing->Done
+* Adiciona tarefas da lista Doing->Done (check)
 */
 void doing2Done () {
 
@@ -705,18 +789,28 @@ void doing2Done () {
 
         printDoing(lDoing);
 
-        scanf(" %s",ind);
+        fgets(ind,MAX_BUFFER_SIZE,stdin);
 
-        if(strcmp("prev",ind)==0) {
-            free(ind);
-            save(fname);
-            return;
+        if(ind[0] == '\n'){
+            systemclear();
+            continue;
         }
+
+        strtok(ind, "\n");
+        systemclear();
+
         if(strlen(ind) == 1 && ind[0] == 'q') {
+            free(ind);
             user_exit();
+        }
+        else if(strcmp("prev",ind)==0) {
+            free(ind);
+            systemclear();
+            return;
         }
         else {
             int c = atoi(ind);
+            free(ind);
             TASK temp = findTask(lDoing,c);
             if(temp.id!= -1) {
                 systemclear();
@@ -739,7 +833,7 @@ void doing2Done () {
                 printf("+--------------------------------------------+\n");
                 printf("| Tarefa adicionada a Done com sucesso!      |\n");
                 printf("+--------------------------------------------+\n");
-                save("");
+                save(fname);
                 break;
             }
             else {
@@ -753,10 +847,10 @@ void doing2Done () {
 }
 
 /*
-* Reabre uma tarefa, anteriormente terminada
+* Reabre uma tarefa, anteriormente terminada (check)
 */
 void done2Doing() {
-    systemclear();
+
     if(size(lDone) == 0) {
         printf("+-------------------------------------------------------------------------+\n");
         printf("| Ainda não existem tarefas em Done que possam ser reabertas              |\n");
@@ -776,17 +870,28 @@ void done2Doing() {
 
         printDone(lDone);
 
-        scanf(" %s",ind);
+        fgets(ind,MAX_BUFFER_SIZE,stdin);
 
-        if(strcmp("prev",ind)==0) {
-            free(ind);
-            return;
+        if(ind[0] == '\n'){
+            systemclear();
+            continue;
         }
+
+        strtok(ind, "\n");
+        systemclear();
+
         if(strlen(ind) == 1 && ind[0] == 'q') {
+            free(ind);
             user_exit();
+        }
+        else if(strcmp("prev",ind)==0) {
+            free(ind);
+            systemclear();
+            return;
         }
         else {
             int c = atoi(ind);
+            free(ind);
             TASK temp = findTask(lDone,c);
             if(temp.id!= -1) {
                 systemclear();
@@ -816,10 +921,10 @@ void done2Doing() {
 }
 
 /*
-* Muda o dono de uma certa tarefa
+* Muda o dono de uma certa tarefa (check)
 */
 void change_owner() {
-    systemclear();
+
     if(size(lDoing) == 0) {
         printf("+-------------------------------------------------------------------------+\n");
         printf("| Ainda não existem tarefas em Doing onde o responsável pode ser alterado |\n");
@@ -837,39 +942,60 @@ void change_owner() {
         printf("| h para ajuda                                                  |\n");
         printf("+---------------------------------------------------------------+\n");
 
-        printDone(lDoing);
+        printDoing(lDoing);
 
-        scanf(" %s",ind);
+        fgets(ind,MAX_BUFFER_SIZE,stdin);
 
-        if(strcmp("prev",ind)==0) {
-            free(ind);
-            return;
+        if(ind[0] == '\n'){
+            systemclear();
+            continue;
         }
+
+        strtok(ind, "\n");
+        systemclear();
+
         if(strlen(ind) == 1 && ind[0] == 'q') {
+            free(ind);
             user_exit();
+        }
+        else if(strcmp("prev",ind)==0) {
+            free(ind);
+            systemclear();
+            return;
         }
         else {
             int c = atoi(ind);
+            free(ind);
             TASK temp = findTask(lDoing,c);
             if(temp.id!= -1) {
                 systemclear();
-                char* new_owner = malloc(sizeof(char)*MAX_BUFFER_SIZE);
                 removeTask(lDoing,temp);
 
                 printf("+--------------------------------------------+\n");
                 printf("| Introduza o novo responsável pela tarefa   |\n");
                 printf("+--------------------------------------------+\n");
 
-                scanf(" %s",new_owner);
+                while(1) {
+                    char* owner = malloc(sizeof(char)*MAX_BUFFER_SIZE);
 
-                strcpy(temp.owner,new_owner);
-                addDoing(lDoing,temp);
+                    fgets(owner,MAX_BUFFER_SIZE,stdin);
 
-                printf("+--------------------------------------------+\n");
-                printf("| Responsável alterado com sucesso!          |\n");
-                printf("+--------------------------------------------+\n");
-
-                break;
+                    if(owner[0] == '\n'){
+                        systemclear();
+                        continue;
+                    }
+                    else{
+                        strtok(owner, "\n");
+                        strcpy(temp.owner,owner);
+                        addDoing(lDoing,temp);
+                        printf("+--------------------------------------------+\n");
+                        printf("| Responsável alterado com sucesso!          |\n");
+                        printf("+--------------------------------------------+\n");
+                        free(owner);
+                        systemclear();
+                        return;
+                    }
+                }
             }
             else {
                 printf("+--------------------------------------------+\n");
@@ -881,87 +1007,122 @@ void change_owner() {
     }
 }
 
-//0 -> existing file
-//1 -> new file
-void func(int n) {
-
-	char *sel = malloc(sizeof(char)*MAX_BUFFER_SIZE);
+/*
+* Menu principal onde se fazem as mudanças de quadros (check)
+*/
+void func() {
 	while(1) {
+        char *sel = malloc(sizeof(char)*MAX_BUFFER_SIZE);
 		printf("+--------------------------------------------------------------+\n");
 		printf("| 1. Adicionar tarefas a ToDo                                  |\n");
 		printf("| 2. Passar uma tarefa de ToDo para Doing                      |\n");
         printf("| 3. Passar uma tarefa de Doing para ToDo                      |\n");
-		printf("| 4. Terminar uma tarefa                                       |\n"); //Passar para done
+		printf("| 4. Terminar uma tarefa                                       |\n");
 		printf("| 5. Reabrir uma tarefa já finalizada                          |\n");
 		printf("| 6. Alterar pessoa responsável por uma tarefa                 |\n");
 		printf("| 7. Vizualizar o quadro                                       |\n");
 		printf("| 8. Vizualizar as tarefas de uma pessoa                       |\n");
 		printf("| 9. Vizualizar todas as tarefas ordenadas por data de criação |\n");
+		printf("| prev para voltar atrás                                       |\n");
+        printf("| q para sair                                                  |\n");
 		printf("+--------------------------------------------------------------+\n");
 
-		scanf(" %s",sel);
+		fgets(sel,MAX_BUFFER_SIZE,stdin);
 
-		systemclear();
+        if(sel[0] == '\n'){
+            systemclear();
+            continue;
+        }
 
-		if(strlen(sel) > 1) printf("Introduza apenas um caracter \n\n");
+        strtok(sel, "\n");
+        systemclear();
+
+        if(strlen(sel) == 1 && sel[0] == 'q') {
+            free(sel);
+            user_exit();
+        }
+        else if(strcmp("prev",sel)==0) {
+            free(sel);
+            systemclear();
+            menu();
+        }
+
+		else if(strlen(sel) > 1){
+            printf("+--------------------------------------------------------------+\n");
+            printf("| Introduza apenas um caracter                                 |\n");
+            printf("+--------------------------------------------------------------+\n");
+            free(sel);
+            continue;
+        }
+
 		else{
-            printf("%s",sel);
 			switch(sel[0]) {
 				case '1':
                     systemclear();
 					addToDoInterface();
+					free(sel);
 					break;
 				case '2':
                     systemclear();
                     toDo2Doing();
+                    free(sel);
 					break;
                 case '3':
                     systemclear();
-                    Doing2ToDo();
+                    doing2ToDo();
+                    free(sel);
                     break;
 				case '4':
                     systemclear();
 					doing2Done();
+					free(sel);
 					break;
 				case '5':
                     systemclear();
                     done2Doing();
+                    free(sel);
 					break;
 				case '6':
                     systemclear();
                     change_owner();
+                    free(sel);
 					break;
 				case '7':
                     systemclear();
 					//print_table();
+					free(sel);
 					break;
 				case '8':
                     systemclear();
 					//print_taskOwned();
+					free(sel);
 					break;
 				case '9':
                     systemclear();
 					//print_by_date();
+					free(sel);
 					break;
 				case 'h': case 'H':
                     systemclear();
 					print_help();
+					free(sel);
 					break;
                 //Quer guardar o trabalho ? Novo ou já existente
 				case 'q': case 'Q':
                     systemclear();
                     user_exit();
+                    free(sel);
 					break;
 				default:
 					printf("Error: Escolha uma opção válida\n\n");
+					free(sel);
 					continue;
 			}
 		}
 	}
-	free(sel);
 }
 
-//Fazer uma função que prepare o ambiente para testing, isto é, mover ficheiros, para temp ou saves, consoante o teste
+//Main
 int main(int argc, char const *argv[]) {
     DATE d;
 	d.day = 1;

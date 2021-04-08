@@ -39,7 +39,7 @@ TASK createTASK(DATE d, char* name, int id, int p) {
     strcpy(t_info.name,name);
     t_info.id = id;
     t_info.priority = p;
-    t_info.owner = NULL;
+    t_info.owner[0] = '\0';
     t_info.dStart = d;
     t_info.deadLine = dNULL();
     t_info.dEnd = dNULL();
@@ -57,7 +57,7 @@ LIST createList() {
     t_head.name[0] = '\0';
     t_head.id = -1;
     t_head.priority = -1;
-    t_head.owner = NULL;
+    t_head.owner[0] = '\0';
     t_head.dStart = d;
     t_head.deadLine = d;
     t_head.dEnd = d;
