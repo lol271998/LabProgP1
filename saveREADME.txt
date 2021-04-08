@@ -7,25 +7,17 @@ nDone -> size de lDone
 
 Cada tarefa ocupa:
 
-4 linhas para lToDo:
-    nome
-    id
-    prioridade
+3 linhas para lToDo:
+    nome*_*id*_*prioridade
     data de inicio
 
-6 linhas para lDoing:
-    nome
-    dono
-    id
-    prioridade
+5 linhas para lDoing:
+    nome*_*dono*_*id*_*prioridade
     data de inicio
     data limite
 
-7 linhas para lDone:
-    nome
-    dono
-    id
-    prioridade
+6 linhas para lDone:
+    nome*_*dono*_*id*_*prioridade
     data de inicio
     data limite
     data de conclusão
@@ -41,24 +33,20 @@ d m y       (int,int,int)
 
 -------------------------------------------------------------
 ntoDo
-nome
-id
-prioridade
+nome*_*idprioridade
 d m y
 
 nDoing
 nome
 dono
-id
-prioridade
+id prioridade
 d m y
 d m y
 
 nDone
 nome
 dono
-id
-prioridade
+id prioridade
 d m y
 d m y
 d m y

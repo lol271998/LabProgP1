@@ -11,7 +11,7 @@
 #else
 #define CLEAR "clear"
 #endif
-
+#define sep "*_*"
 #define MAX_BUFFER_SIZE 1024
 
 void systemclear();
@@ -24,8 +24,9 @@ void menu();
 void func();
 
 LIST lToDo,lDoing,lDone;
+TASK temp;
 int id,isNew;
-//Default is temp.txt
+//Default is temp->txt
 char* fname;
 
 void systemclear() {
@@ -45,19 +46,21 @@ bool file_exist(const char * filename){
 }
 
 /*
-*
 * Saves content in file
-*
 */
 void save(char* user_fname) {
 
-    if(strcmp(user_fname,"temp.txt") != 0){
+    if(strcmp(user_fname,"temp->txt") != 0){
         fname = malloc(sizeof(char)*strlen(user_fname));
         strcpy(fname,user_fname);
         strcat(fname,".txt");
     }
 
     FILE *fp = fopen(fname,"w+");
+    if (fp == NULL) {
+        perror("fopen()");
+        exit(1);
+    }
     LIST temp;
 
     //guardar os conteudos de lToDo
@@ -66,9 +69,7 @@ void save(char* user_fname) {
         temp = lToDo;
         temp = temp->next;
         while(temp){
-            fprintf(fp,"%s\n",temp->task.name);
-            fprintf(fp,"%d\n",temp->task.id);
-            fprintf(fp,"%d\n",temp->task.priority);
+            fprintf(fp,"%s%s%d%s%d\n",temp->task.name,sep,temp->task.id,sep,temp->task.priority);
             fprintf(fp,"%d %d %d\n",temp->task.dStart.day,temp->task.dStart.month,temp->task.dStart.year);
             temp = temp->next;
         }
@@ -79,10 +80,7 @@ void save(char* user_fname) {
         temp = lDoing;
         temp = temp->next;
         while(temp){
-            fprintf(fp,"%s\n",temp->task.name);
-            fprintf(fp,"%s\n",temp->task.owner);
-            fprintf(fp,"%d\n",temp->task.id);
-            fprintf(fp,"%d\n",temp->task.priority);
+            fprintf(fp,"%s%s%s%s%d%s%d\n",temp->task.name,sep,temp->task.owner,sep,temp->task.id,sep,temp->task.priority);
             fprintf(fp,"%d %d %d\n",temp->task.dStart.day,temp->task.dStart.month,temp->task.dStart.year);
             fprintf(fp,"%d %d %d\n",temp->task.deadLine.day,temp->task.deadLine.month,temp->task.deadLine.year);
             temp = temp->next;
@@ -95,10 +93,7 @@ void save(char* user_fname) {
         temp = lDone;
         temp = temp->next;
         while(temp){
-            fprintf(fp,"%s\n",temp->task.name);
-            fprintf(fp,"%s\n",temp->task.owner);
-            fprintf(fp,"%d\n",temp->task.id);
-            fprintf(fp,"%d\n",temp->task.priority);
+            fprintf(fp,"%s%s%s%s%d%s%d\n",temp->task.name,sep,temp->task.owner,sep,temp->task.id,sep,temp->task.priority);
             fprintf(fp,"%d %d %d\n",temp->task.dStart.day,temp->task.dStart.month,temp->task.dStart.year);
             fprintf(fp,"%d %d %d\n",temp->task.deadLine.day,temp->task.deadLine.month,temp->task.deadLine.year);
             fprintf(fp,"%d %d %d\n",temp->task.dEnd.day,temp->task.dEnd.month,temp->task.dEnd.year);
@@ -148,37 +143,141 @@ void user_exit() {
 }
 
 /*
-* Abre um ficheiro existente para leitura de dados
+* Abre um ficheiro existente para leitura de dados - Não guarda os nomes
 */
 void existing_table() {
 
 	int error = 2;
 
+	fname = malloc(sizeof(char)*MAX_BUFFER_SIZE);
+
 	while (error == 2) {
 
+		printf("+-----------------------------------------+\n");
+		printf("| Introduza o nome do ficheiro:           |\n");
+		printf("+-----------------------------------------+\n");
+
+		fgets(fname,MAX_BUFFER_SIZE,stdin);
+
+        if(fname[0] == '\n'){
+            systemclear();
+            continue;
+        }
+
+        strtok(fname, "\n");
+        systemclear();
+
+		if(file_exist(fname)) {
+            FILE * file = fopen(fname,"r");
+            while (1) {
+
+                char* line = malloc(sizeof(char)*MAX_BUFFER_SIZE);
+                size_t buffsize = MAX_BUFFER_SIZE;
+                getline(&line,&buffsize,file);
+                int n = atoi(line);
+                //AddToDo
+                for(int i = 0; i<n; i++) {
+                    getline(&line,&buffsize,file);
+                    char linearray[strlen(line)];
+
+                    strcpy(linearray,line);
+                    strcpy(temp.name,strtok(linearray,sep));
+
+                    temp.id= atoi(strtok(NULL,sep));
+                    temp.priority = atoi(strtok(NULL,sep));
+
+                    getline(&line,&buffsize,file);
+                    char date[strlen(line)];
+                    strcpy(date,line);
+
+                    temp.dStart.day = atoi(strtok(date," "));
+                    temp.dStart.month = atoi(strtok(NULL," "));
+                    temp.dStart.year = atoi(strtok(NULL," "));
+
+                    addToDo(lToDo,temp);
+                }
+
+                getline(&line,&buffsize,file);
+                n = atoi(line);
+
+                for(int i = 0; i<n; i++) {
+                    getline(&line,&buffsize,file);
+                    char linearray[strlen(line)];
+
+                    strcpy(linearray,line);
+
+                    strcpy(temp.name,strtok(linearray,sep));
+                    temp.owner = strtok(NULL,sep);
+                    temp.id= atoi(strtok(NULL,sep));
+                    temp.priority = atoi(strtok(NULL,sep));
+
+                    getline(&line,&buffsize,file);
+                    char date[strlen(line)];
+                    strcpy(date,line);
+
+                    temp.dStart.day = atoi(strtok(date," "));
+                    temp.dStart.month = atoi(strtok(NULL," "));
+                    temp.dStart.year = atoi(strtok(NULL," "));
+
+                    getline(&line,&buffsize,file);
+                    date[strlen(line)];
+                    strcpy(date,line);
+
+                    temp.deadLine.day = atoi(strtok(date," "));
+                    temp.deadLine.month = atoi(strtok(NULL," "));
+                    temp.deadLine.year = atoi(strtok(NULL," "));
+
+                    addDoing(lDoing,temp);
+                }
+
+                getline(&line,&buffsize,file);
+                n = atoi(line);
+
+                for(int i = 0; i<n; i++) {
+                    getline(&line,&buffsize,file);
+                    char linearray[strlen(line)];
+
+                    strcpy(linearray,line);
+
+                    strcpy(temp.name,strtok(linearray,sep));
+                    temp.owner = strtok(NULL,sep);
+                    temp.id= atoi(strtok(NULL,sep));
+                    temp.priority = atoi(strtok(NULL,sep));
+
+                    getline(&line,&buffsize,file);
+                    char date[strlen(line)];
+                    strcpy(date,line);
+
+                    temp.dStart.day = atoi(strtok(date," "));
+                    temp.dStart.month = atoi(strtok(NULL," "));
+                    temp.dStart.year = atoi(strtok(NULL," "));
+
+                    getline(&line,&buffsize,file);
+                    date[strlen(line)];
+                    strcpy(date,line);
+
+                    temp.deadLine.day = atoi(strtok(date," "));
+                    temp.deadLine.month = atoi(strtok(NULL," "));
+                    temp.deadLine.year = atoi(strtok(NULL," "));
+
+                    getline(&line,&buffsize,file);
+                    date[strlen(line)];
+                    strcpy(date,line);
+
+                    temp.dEnd.day = atoi(strtok(date," "));
+                    temp.dEnd.month = atoi(strtok(NULL," "));
+                    temp.dEnd.year = atoi(strtok(NULL," "));
 
 
-		printf("+--------------------------------------------------------------+\n");
-		printf("| Introduza o nome do ficheiro:                                |\n");
-		printf("+--------------------------------------------------------------+\n");
-
-		scanf(" %s",fname);
-
-		char* path = malloc(strlen("/save/")+strlen(fname)+1);
-		strcpy(path,"/save/");
-		strcat(path,fname);
-
-		systemclear();
-
-		if(file_exist(path)) {
-		/**
-		*
-		* Abrir o ficheiro e passar para func
-		*
-		*/
+                    addDone(lDone,temp);
+                }
+                free(line);
+                break;
+            }
+            fclose(file);
+            break;
 		}
 		else {
-
 			printf("+--------------------------------------------------------------+\n");
 			printf("| Ficheiro não existe.                                         |\n");
 			printf("| Verifique se escreveu o nome sem erros.                      |\n");
@@ -190,13 +289,14 @@ void existing_table() {
                 char* sel = malloc(sizeof(char)*MAX_BUFFER_SIZE);
 				scanf(" %s",sel);
 
-				systemclear();
+				//systemclear();
 
 				if(strlen(sel) > 1) printf("Introduza apenas um caracter\n\n");
 				else{
 					switch(sel[0]) {
 						case 's': case 'S':
-							//new_table(fname);
+                            save(fname);
+                            func();
 							error = 0;
 							break;
 						case 'n': case 'N':
@@ -251,18 +351,19 @@ void menu() {
 
 		systemclear();
 
-
 		if(strlen(sel) > 1) printf("Introduza apenas um caracter\n\n");
 		else{
 			switch(sel[0]) {
 				case '1':
                     free(sel);
+                    fname = "temp->txt";
 					func();
 					error = 0;
 					break;
 				case '2':
                     free(sel);
-					//existing_table();
+					existing_table();
+					func();
 					error = 0;
 					break;
 				case 'h': case 'H':
@@ -430,7 +531,7 @@ void toDo2Doing() {
         else {
             int c = atoi(ind);
             TASK temp = findTask(lToDo,c);
-            if(temp.id != -1) {
+            if(temp.id!= -1) {
                 systemclear();
                 temp.owner = malloc(sizeof(char)*MAX_BUFFER_SIZE);
                 removeTask(lToDo,temp);
@@ -508,7 +609,7 @@ void toDo2Doing() {
                 printf("+--------------------------------------------+\n");
                 printf("| Tarefa adicionada a Doing com sucesso!     |\n");
                 printf("+--------------------------------------------+\n");
-
+                save(fname);
                 break;
            }
            else {
@@ -521,7 +622,6 @@ void toDo2Doing() {
         }
     }
 }
-
 
 /*
 * Adiciona tarefas da lista Doing->toDo
@@ -559,7 +659,7 @@ void Doing2ToDo() {
         else {
             int c = atoi(ind);
             TASK temp = findTask(lDoing,c);
-            if(temp.id != -1) {
+            if(temp.id!= -1) {
                 systemclear();
                 removeTask(lDoing,temp);
 
@@ -568,6 +668,7 @@ void Doing2ToDo() {
                 d.month = -1;
                 d.year = -1;
 
+                temp.dEnd = d;
                 temp.owner = NULL;
 
                 addToDo(lToDo,temp);
@@ -578,6 +679,7 @@ void Doing2ToDo() {
         }
     }
 }
+
 /*
 * Adiciona tarefas da lista Doing->Done
 */
@@ -616,7 +718,7 @@ void doing2Done () {
         else {
             int c = atoi(ind);
             TASK temp = findTask(lDoing,c);
-            if(temp.id != -1) {
+            if(temp.id!= -1) {
                 systemclear();
                 removeTask(lDoing,temp);
 
@@ -637,6 +739,7 @@ void doing2Done () {
                 printf("+--------------------------------------------+\n");
                 printf("| Tarefa adicionada a Done com sucesso!      |\n");
                 printf("+--------------------------------------------+\n");
+                save("");
                 break;
             }
             else {
@@ -685,7 +788,7 @@ void done2Doing() {
         else {
             int c = atoi(ind);
             TASK temp = findTask(lDone,c);
-            if(temp.id != -1) {
+            if(temp.id!= -1) {
                 systemclear();
                 removeTask(lDone,temp);
                 DATE d;
@@ -748,7 +851,7 @@ void change_owner() {
         else {
             int c = atoi(ind);
             TASK temp = findTask(lDoing,c);
-            if(temp.id != -1) {
+            if(temp.id!= -1) {
                 systemclear();
                 char* new_owner = malloc(sizeof(char)*MAX_BUFFER_SIZE);
                 removeTask(lDoing,temp);
@@ -782,12 +885,8 @@ void change_owner() {
 //1 -> new file
 void func(int n) {
 
-	int error = 1;
-
 	char *sel = malloc(sizeof(char)*MAX_BUFFER_SIZE);
-
 	while(1) {
-
 		printf("+--------------------------------------------------------------+\n");
 		printf("| 1. Adicionar tarefas a ToDo                                  |\n");
 		printf("| 2. Passar uma tarefa de ToDo para Doing                      |\n");
@@ -864,12 +963,15 @@ void func(int n) {
 
 //Fazer uma função que prepare o ambiente para testing, isto é, mover ficheiros, para temp ou saves, consoante o teste
 int main(int argc, char const *argv[]) {
+    DATE d;
+	d.day = 1;
+	d.month = 1;
+	d.year = 1999;
+	temp = createTASK(d,"",0,0);
     lToDo = createList();
     lDoing = createList();
     lDone = createList();
  	systemclear();
     id = 0;
-    fname = "temp.txt";
 	menu();
-	save(fname);
 }

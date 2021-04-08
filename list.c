@@ -18,10 +18,14 @@ DATE dNULL() {
 * Quando passamos de tabela para tabela não esquecer de:
 * - Atribuir dono (Doing)
 * - Atribuir Data limite (Doing)
+* - Atribuir Data limite (Doing)
+* - Atribuir Data limite (Doing)
 * - Atribuir data de conclusão (Done)
 *
 **/
+
 TASK createTASK(DATE d, char* name, int id, int p) {
+
     /*
     *
     * Quando criamos uma tarefa só precisamos de:
@@ -31,10 +35,8 @@ TASK createTASK(DATE d, char* name, int id, int p) {
     * - prioridade
     *
     */
-
-
     TASK t_info;
-    t_info.name = name;
+    strcpy(t_info.name,name);
     t_info.id = id;
     t_info.priority = p;
     t_info.owner = NULL;
@@ -51,9 +53,8 @@ LIST createList() {
     d.day = 0;
     d.month = 0;
     d.year = 0;
-
     TASK t_head;
-    t_head.name = NULL;
+    t_head.name[0] = '\0';
     t_head.id = -1;
     t_head.priority = -1;
     t_head.owner = NULL;

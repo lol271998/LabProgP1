@@ -11,13 +11,13 @@ struct date {
 typedef struct task TASK;
 struct task {
 
-    char* name;    // NULL se não definido
-    int id;        // -1 se não definido
-    int priority;  // -1 se não definido
-    char* owner;   // NULL se não definido
-    DATE dStart;   // (0,0,0) se não definida
-    DATE deadLine; // (0,0,0) se não definida
-    DATE dEnd;     // (0,0,0) se não definida
+    char name [40]; // NULL se não definido
+    int id;         // -1 se não definido
+    int priority;   // -1 se não definido
+    char* owner;    // NULL se não definido
+    DATE dStart;    // (0,0,0) se não definida
+    DATE deadLine;  // (0,0,0) se não definida
+    DATE dEnd;      // (0,0,0) se não definida
 
 };
 
@@ -28,7 +28,7 @@ struct list{
 }List_node;
 
 int size(LIST l); //Devolve o tamanho da lista //Done
-TASK createTASK(DATE d, char* name, int id, int p); //Done
+TASK createTASK(DATE d, char name[], int id, int p); //Done
 
 LIST createList(); //Done
 DATE dateNULL();

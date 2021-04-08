@@ -33,7 +33,7 @@
 	<time.h>
 	"list.h"
 
-1617242354 source:/home/fcd/Desktop/FCUP/LabProg/LabProgP1/main.c
+1617875922 source:/home/fcd/Desktop/FCUP/LabProg/LabProgP1/main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -42,9 +42,9 @@
 	<time.h>
 	"list.h"
 
-1617150770 /home/fcd/Desktop/FCUP/LabProg/LabProgP1/list.h
+1617875087 /home/fcd/Desktop/FCUP/LabProg/LabProgP1/list.h
 
-1617203523 source:/home/fcd/Desktop/FCUP/LabProg/LabProgP1/list.c
+1617875405 source:/home/fcd/Desktop/FCUP/LabProg/LabProgP1/list.c
 	"list.h"
 	<time.h>
 	<stdlib.h>
