@@ -467,11 +467,11 @@ void addToDoInterface() {
             current_time = localtime(&s);
             systemclear();
 
-            printf("+------------------------------------+\n");
-            printf("| Introduza a prioridade             |\n");
-            printf("+------------------------------------+\n");
-
             while(1) {
+                printf("+------------------------------------+\n");
+                printf("| Introduza a prioridade             |\n");
+                printf("+------------------------------------+\n");
+
                 char* in  = malloc(sizeof(char)*MAX_BUFFER_SIZE);
                 fgets(in,MAX_BUFFER_SIZE,stdin);
 
@@ -597,11 +597,10 @@ void toDo2Doing() {
                 removeTask(lToDo,temp);
                 systemclear();
 
-                printf("+------------------------------+\n");
-                printf("| Introduza o dono da tarefa   |\n");
-                printf("+------------------------------+\n");
-
                 while(1) {
+                    printf("+------------------------------+\n");
+                    printf("| Introduza o dono da tarefa   |\n");
+                    printf("+------------------------------+\n");
                     char* owner = malloc(sizeof(char)*MAX_BUFFER_SIZE);
 
                     fgets(owner,MAX_BUFFER_SIZE,stdin);
@@ -618,11 +617,10 @@ void toDo2Doing() {
                     }
                 }
 
-                printf("+------------------------------+\n");
-                printf("| Introduza a data limite      |\n");
-                printf("+------------------------------+\n");
-
                 while(1) {
+                    printf("+------------------------------+\n");
+                    printf("| Introduza a data limite      |\n");
+                    printf("+------------------------------+\n");
                     DATE d1,d2;
                     time_t s;
                     struct tm* current_time;
@@ -634,8 +632,19 @@ void toDo2Doing() {
                     d1.year = current_time->tm_year + 1900;
                     char* d = malloc(sizeof(char)*2);
                     printf("dia: ");
-                    scanf("%s",d);
+                    fgets(d,MAX_BUFFER_SIZE,stdin);
+                    if(d[0] == '\n'){
+                        systemclear();
+                        printf("+--------------------------------+\n");
+                        printf("| Introduza uma data válida!     |\n");
+                        printf("+--------------------------------+\n");
+                        free(d);
+                        continue;
+                    }
+
+                    strtok(d, "\n");
                     if(isDateValid(d,0) == 0){
+                        systemclear();
                         printf("+--------------------------------+\n");
                         printf("| Introduza uma data válida!     |\n");
                         printf("+--------------------------------+\n");
@@ -644,21 +653,49 @@ void toDo2Doing() {
                     else d2.day = atoi(d);
 
                     printf("mês: ");
-                    scanf("%s",d);
-                    if(isDateValid(d,1) == 0){
+
+                    fgets(d,MAX_BUFFER_SIZE,stdin);
+                    if(d[0] == '\n'){
+                        systemclear();
                         printf("+--------------------------------+\n");
                         printf("| Introduza uma data válida!     |\n");
                         printf("+--------------------------------+\n");
+                        free(d);
+                        continue;
+                    }
+
+                    strtok(d, "\n");
+
+                    if(isDateValid(d,1) == 0){
+                        systemclear();
+                        printf("+--------------------------------+\n");
+                        printf("| Introduza uma data válida!     |\n");
+                        printf("+--------------------------------+\n");
+                        free(d);
                         continue;
                     }
                     else d2.month = atoi(d);
 
                     printf("ano: ");
-                    scanf("%s",d);
-                    if(isDateValid(d,2) == 0){
+
+                    fgets(d,MAX_BUFFER_SIZE,stdin);
+                    if(d[0] == '\n'){
+                        systemclear();
                         printf("+--------------------------------+\n");
                         printf("| Introduza uma data válida!     |\n");
                         printf("+--------------------------------+\n");
+                        free(d);
+                        continue;
+                    }
+
+                    strtok(d, "\n");
+
+                    if(isDateValid(d,2) == 0){
+                        systemclear();
+                        printf("+--------------------------------+\n");
+                        printf("| Introduza uma data válida!     |\n");
+                        printf("+--------------------------------+\n");
+                        free(d);
                         continue;
                     }
                     else d2.year = atoi(d);
@@ -679,7 +716,6 @@ void toDo2Doing() {
 
                 systemclear();
                 addDoing(lDoing,temp);
-
                 printf("+--------------------------------------------+\n");
                 printf("| Tarefa adicionada a Doing com sucesso!     |\n");
                 printf("+--------------------------------------------+\n");
