@@ -24,8 +24,10 @@ void menu();
 void func();
 
 LIST lToDo,lDoing,lDone;
+DATE defaultdate;
 TASK temp;
-int id,isNew;
+
+int id;
 //Default is temp->txt
 char* fname;
 
@@ -109,7 +111,6 @@ void save(char* user_fname) {
 */
 void user_exit() {
     systemclear();
-    char* sel = malloc(sizeof(char)*MAX_BUFFER_SIZE);
 
     printf("+------------------------------------------+\n");
 	printf("| Quer guardar o ficheiro ?                |\n");
@@ -117,40 +118,49 @@ void user_exit() {
     printf("+------------------------------------------+\n");
 
     while(1) {
-        scanf(" %s",sel);
+        char* sel = malloc(sizeof(char)*MAX_BUFFER_SIZE);
+		fgets(sel,MAX_BUFFER_SIZE,stdin);
+
+        if(sel[0] == '\n'){
+            systemclear();
+            continue;
+        }
+
+        strtok(sel, "\n");
+        systemclear();
+
+        if(strlen(sel) == 1) {
+            switch(sel[0]){
+                case 's':
+                    free(sel);
+                    char *user_fname = malloc(sizeof(char)*MAX_BUFFER_SIZE);
+                    printf("+------------------------------------------+\n");
+                    printf("| Introduza o nome do ficheiro             |\n");
+                    printf("+------------------------------------------+\n");
+
+                    scanf(" %s",user_fname);
+                    save(user_fname);
+                    free(lToDo);
+                    free(lDoing);
+                    free(lDone);
+                    exit(0);
+					break;
+				case 'n':
+                    free(sel);
+                    remove(fname);
+                    free(lToDo);
+                    free(lDoing);
+                    free(lDone);
+                    exit(0);
+					break;
+				default:
+					printf("Error: Escolha uma opção válida\n\n");
+            }
+        }
 
         if(strlen(sel) > 1){
             printf("Introduza apenas um caracter \n\n");
             continue;
-        }
-
-        else if(sel[0] == 's'){
-            free(sel);
-            char *user_fname = malloc(sizeof(char)*MAX_BUFFER_SIZE);
-            printf("+------------------------------------------+\n");
-            printf("| Introduza o nome do ficheiro             |\n");
-            printf("+------------------------------------------+\n");
-
-            scanf(" %s",user_fname);
-            save(user_fname);
-            printToDo(lToDo);
-            printDoing(lDoing);
-            printDone(lDone);
-            free(lToDo);
-            free(lDoing);
-            free(lDone);
-            exit(0);
-        }
-        else {
-            free(sel);
-            remove(fname);
-            printToDo(lToDo);
-            printDoing(lDoing);
-            printDone(lDone);
-            free(lToDo);
-            free(lDoing);
-            free(lDone);
-            exit(0);
         }
     }
 }
@@ -186,17 +196,20 @@ void existing_table() {
 
                 char* line = malloc(sizeof(char)*MAX_BUFFER_SIZE);
                 size_t buffsize = MAX_BUFFER_SIZE;
+
+                //AddToDo
                 getline(&line,&buffsize,file);
                 int n = atoi(line);
-                //AddToDo
                 for(int i = 0; i<n; i++) {
+                    temp = createTASK(defaultdate,"",0,0);
                     getline(&line,&buffsize,file);
                     char linearray[strlen(line)];
 
                     strcpy(linearray,line);
                     strcpy(temp.name,strtok(linearray,sep));
 
-                    temp.id= atoi(strtok(NULL,sep));
+                    temp.id = atoi(strtok(NULL,sep));
+                    if(temp.id>=id) id = temp.id+1;
                     temp.priority = atoi(strtok(NULL,sep));
 
                     getline(&line,&buffsize,file);
@@ -215,6 +228,7 @@ void existing_table() {
                 n = atoi(line);
 
                 for(int i = 0; i<n; i++) {
+                    temp = createTASK(defaultdate,"",0,0);
                     getline(&line,&buffsize,file);
                     char linearray[strlen(line)];
 
@@ -223,6 +237,7 @@ void existing_table() {
                     strcpy(temp.name,strtok(linearray,sep));
                     strcpy(temp.owner,strtok(NULL,sep));
                     temp.id = atoi(strtok(NULL,sep));
+                    if(temp.id>=id) id = temp.id+1;
                     temp.priority = atoi(strtok(NULL,sep));
 
                     getline(&line,&buffsize,file);
@@ -244,10 +259,12 @@ void existing_table() {
                     addDoing(lDoing,temp);
                 }
 
+                //AddDone
                 getline(&line,&buffsize,file);
                 n = atoi(line);
 
                 for(int i = 0; i<n; i++) {
+                    temp = createTASK(defaultdate,"",0,0);
                     getline(&line,&buffsize,file);
                     char linearray[strlen(line)];
 
@@ -256,6 +273,7 @@ void existing_table() {
                     strcpy(temp.name,strtok(linearray,sep));
                     strcpy(temp.owner,strtok(NULL,sep));
                     temp.id= atoi(strtok(NULL,sep));
+                    if(temp.id>=id) id = temp.id+1;
                     temp.priority = atoi(strtok(NULL,sep));
 
                     getline(&line,&buffsize,file);
@@ -302,8 +320,6 @@ void existing_table() {
 			while(error != 0) {
                 char* sel = malloc(sizeof(char)*MAX_BUFFER_SIZE);
 				scanf(" %s",sel);
-
-				//systemclear();
 
 				if(strlen(sel) > 1) printf("Introduza apenas um caracter\n\n");
 				else{
@@ -389,12 +405,6 @@ void menu() {
 					printf("Error: Escolha uma opção válida\n\n");
             }
         }
-        else if(strcmp("prev",sel)==0) {
-            free(sel);
-            systemclear();
-            menu();
-        }
-
 		else if(strlen(sel) > 1){
             printf("+--------------------------------------------------------------+\n");
             printf("| Introduza apenas um caracter                                 |\n");
@@ -1048,7 +1058,7 @@ void change_owner() {
 */
 void func() {
 	while(1) {
-        char *sel = malloc(sizeof(char)*MAX_BUFFER_SIZE);
+
 		printf("+--------------------------------------------------------------+\n");
 		printf("| 1. Adicionar tarefas a ToDo                                  |\n");
 		printf("| 2. Passar uma tarefa de ToDo para Doing                      |\n");
@@ -1063,6 +1073,7 @@ void func() {
         printf("| q para sair                                                  |\n");
 		printf("+--------------------------------------------------------------+\n");
 
+        char *sel = malloc(sizeof(char)*MAX_BUFFER_SIZE);
 		fgets(sel,MAX_BUFFER_SIZE,stdin);
 
         if(sel[0] == '\n'){
@@ -1160,11 +1171,11 @@ void func() {
 
 //Main
 int main(int argc, char const *argv[]) {
-    DATE d;
-	d.day = 1;
-	d.month = 1;
-	d.year = 1999;
-	temp = createTASK(d,"",0,0);
+
+    defaultdate.day = 1;
+    defaultdate.month = 1;
+    defaultdate.year = 1999;
+
     lToDo = createList();
     lDoing = createList();
     lDone = createList();
