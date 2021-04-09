@@ -1,0 +1,6 @@
+#ifndef GETLINE_H_INCLUDED
+#define GETLINE_H_INCLUDED
+
+
+
+#endif // GETLINE_H_INCLUDED

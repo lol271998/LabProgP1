@@ -33,11 +33,11 @@
 	<time.h>
 	"list.h"
 
-<<<<<<< HEAD
-1617914904 source:/home/fcd/Desktop/FCUP/LabProg/LabProgP1/main.c
-=======
+1616778780 D
+
 1617970082 source:/home/fcd/Desktop/FCUP/LabProg/LabProgP1/main.c
->>>>>>> e2212507a2176d28dd08335a94f5f7015a27c5b3
+
+1617970082 12507a2176d28dd08335a94f5f7015a27c5b3
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -47,9 +47,9 @@
 	"getline.h"
 	"list.h"
 
-1617909103 /home/fcd/Desktop/FCUP/LabProg/LabProgP1/list.h
+1617973618 /home/fcd/Desktop/FCUP/LabProg/LabProgP1/list.h
 
-1617961650 source:/home/fcd/Desktop/FCUP/LabProg/LabProgP1/list.c
+1617973618 source:/home/fcd/Desktop/FCUP/LabProg/LabProgP1/list.c
 	"list.h"
 	<time.h>
 	<stdlib.h>

@@ -126,24 +126,6 @@ void user_exit() {
             continue;
         }
 
-<<<<<<< HEAD
-        else if(sel[0] == 's'){
-            free(sel);
-            char *user_fname = malloc(sizeof(char)*MAX_BUFFER_SIZE);
-            printf("+------------------------------------------+\n");
-            printf("| Introduza o nome do ficheiro             |\n");
-            printf("+------------------------------------------+\n");
-
-            scanf(" %s",user_fname);
-            save(user_fname);
-            printToDo(lToDo);
-            printDoing(lDoing);
-            printDone(lDone);
-            free(lToDo);
-            free(lDoing);
-            free(lDone);
-            exit(0);
-=======
         strtok(sel, "\n");
         systemclear();
 
@@ -175,7 +157,6 @@ void user_exit() {
 				default:
 					printf("Error: Escolha uma opção válida\n\n");
             }
->>>>>>> e2212507a2176d28dd08335a94f5f7015a27c5b3
         }
         else {
             free(sel);
