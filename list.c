@@ -127,13 +127,10 @@ void auxToDo(LIST lista, TASK t,LIST *ant,LIST *atual){
         *ant = *atual;
         *atual = (*atual)->next;
     }
-    while ((*atual) != NULL &&  (compareToDo((*atual) -> task,t ))>=-1 ){
-        *ant = *atual;
-        *atual = (*atual)->next;
-    }
+
 }
 
-//Ordenado por prioridade e depois data de ciraçao (task.priority) (task.dStart)
+//Ordenado por prioridade (task.priority)
 void addToDo(LIST l, TASK t){
     LIST node;
     LIST ant,inut;
@@ -330,17 +327,72 @@ void printDone(LIST l){
     }
 }
 
-void dispLists(LIST l1,LIST l2,LIST l3){
+void dispList(LIST l1){
     LIST temp1 = l1;
-    LIST temp2 = l2;
-    LIST temp3 = l3;
     temp1=temp1->next;
-    temp2=temp2->next;
-    temp3=temp3->next;
-    while(temp1 || temp2 || temp3){
+    while(temp1){
         printf(" %s\n",temp1->task.name);
         temp1=temp1->next;
-        temp2=temp2->next;
-        temp3=temp3->next;
+    }
+}
+
+void pTasks(LIST l,char * owne){
+    LIST temp = l;
+    temp=temp->next;
+
+    while(temp){
+        if(strcmp(owne,temp->task.owner)==0)
+            printf(" %s\n",temp->task.name);
+    temp=temp->next;
+    }
+}
+
+void pTasksAll(LIST l1,LIST l2,LIST l3,char * owne){
+	if((ownsTask(l1,owne)==0) && (ownsTask(l2,owne)==0) && (ownsTask(l3,owne)==0)){
+		printf("+--------------------------------------------------------------+\n");
+    	printf("| %s nao tem tarefas                                           |\n",owne);
+    	printf("+--------------------------------------------------------------+\n");
+		return;
+	}
+	else{
+        printf("+--------------------------------------------------------------+\n");
+        printf("| Tarefas de %s                                                |\n",owne);
+        printf("+--------------------------------------------------------------+\n");
+        pTasks(l1,owne);
+        pTasks(l2,owne);
+        pTasks(l3,owne);
+	}
+}
+
+int ownsTask(LIST l,char * owne){
+	LIST temp = l;
+    temp=temp->next;
+    int count=0;
+    while(temp){
+        if(strcmp(owne,temp->task.owner)==0)
+        	count++;
+        temp=temp->next;
+    }
+    return count;
+}
+
+void addByDate(LIST l,TASK t){
+    LIST node;
+    LIST ant,inut;
+    node = (LIST) malloc (sizeof(List_node));
+    if(node!=NULL){
+        node->task = t;
+        auxAddByDate(l,t,&ant,&inut);
+        node->next = ant->next;
+        ant->next = node;
+    }
+}
+
+void auxAddByDate(LIST lista,TASK t,LIST *ant,LIST *atual){
+    *ant=lista;
+    *atual=lista->next;
+    while ((*atual) != NULL &&  (compareToDo((*atual) -> task,t ))<=0 ){
+        *ant = *atual;
+        *atual = (*atual)->next;
     }
 }

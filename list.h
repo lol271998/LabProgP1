@@ -62,6 +62,13 @@ void printAllTask();
 
 void printDate(DATE d);
 
+void auxAddByDate(LIST lista,TASK t,LIST *ant,LIST *atual);
+void addByDate(LIST l,TASK t);
+int ownsTask(LIST l,char * owne);
+void pTasksAll(LIST l1,LIST l2,LIST l3,char * owne);
+void pTasks(LIST l,char * owne);
+void dispList(LIST l1);
+
 #endif // LIST_H_INCLUDED
 
 

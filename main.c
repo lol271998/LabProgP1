@@ -1064,6 +1064,63 @@ void change_owner() {
     }
 }
 
+void printByDate(){
+    systemclear();
+    LIST l = createList();
+    LIST temp1 =lToDo;
+    LIST temp2 =lDoing;
+    LIST temp3 =lDone;
+    temp1 =temp1->next;
+    temp3 =temp3->next;
+    temp3 =temp3->next;
+    while(temp1){
+        addByDate(l,temp1->task);
+        temp1 =temp1->next;
+    }
+     while(temp2){
+        addByDate(l,temp2->task);
+        temp2 =temp2->next;
+    }
+     while(temp1){
+        addByDate(l,temp3->task);
+        temp3 =temp3->next;
+    }
+    dispList(l);
+}
+
+void pTasksOfOwner(){
+    systemclear();
+    char * nameowner = malloc(sizeof(char)*MAX_BUFFER_SIZE);
+    printf("+--------------------------------------------------------------+\n");
+    printf("| Introduza o nome da pessoa                                   |\n");
+    printf("+--------------------------------------------------------------+\n");
+    scanf("%s",nameowner);
+    systemclear();
+    pTasksAll(lToDo,lDoing,lDone,nameowner);
+    free(nameowner);
+}
+
+void printTable(){
+    systemclear();
+    printf("+--------+\n");
+    printf("| To Do  |\n");
+    printf("+--------+\n");
+    printf("\n");
+    dispList(lToDo);
+    printf("\n");
+    printf("+--------+\n");
+    printf("| Doing  |\n");
+    printf("+--------+\n");
+    printf("\n");
+    dispList(lDoing);
+    printf("\n");
+    printf("+--------+\n");
+    printf("|  Done  |\n");
+    printf("+--------+\n");
+    printf("\n");
+    dispList(lDone);
+    printf("\n");
+}
 /*
 * Menu principal onde se fazem as mudanças de quadros (check)
 */
@@ -1146,17 +1203,17 @@ void func() {
 					break;
 				case '7':
                     systemclear();
-					//print_table();
+					printTable();
 					free(sel);
 					break;
 				case '8':
                     systemclear();
-					//print_taskOwned();
+					pTasksOfOwner();
 					free(sel);
 					break;
 				case '9':
                     systemclear();
-					//print_by_date();
+					printByDate();
 					free(sel);
 					break;
 				case 'h': case 'H':

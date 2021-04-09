@@ -72,3 +72,24 @@
 
 1617974001 /home/fcd/Desktop/FCUP/LabProg/LabProgP1/getline.h
 
+1618005489 source:c:\users\grand\documents\fac\labprogp1\list.c
+	"list.h"
+	<time.h>
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+
+1618005607 c:\users\grand\documents\fac\labprogp1\list.h
+
+1618005300 source:c:\users\grand\documents\fac\labprogp1\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+	<ctype.h>
+	<time.h>
+	"getline.h"
+	"list.h"
+
+1618005114 c:\users\grand\documents\fac\labprogp1\getline.h
+
