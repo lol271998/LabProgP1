@@ -4,7 +4,9 @@
 #include <stdbool.h>
 #include <ctype.h>
 #include <time.h>
+#include "getline.h"
 #include "list.h"
+#define _GNU_SOURCE
 
 #ifdef _WIN32
 #define CLEAR "cls"
@@ -136,6 +138,7 @@ void user_exit() {
                     char *user_fname = malloc(sizeof(char)*MAX_BUFFER_SIZE);
                     printf("+------------------------------------------+\n");
                     printf("| Introduza o nome do ficheiro             |\n");
+                    printf("| Sem extensão                             |\n");
                     printf("+------------------------------------------+\n");
 
                     scanf(" %s",user_fname);
@@ -518,6 +521,7 @@ void addToDoInterface() {
             printf("+------------------------------------+\n");
             printf("| Tarefa adicionada com sucesso!     |\n");
             printf("+------------------------------------+\n");
+            save(fname);
             count++;
         }
     }
@@ -803,7 +807,7 @@ void doing2ToDo() {
                 temp.owner[0] = '\0';
 
                 addToDo(lToDo,temp);
-
+                save(fname);
                 break;
             }
         }
@@ -954,6 +958,7 @@ void done2Doing() {
                 printf("+--------------------------------------------+\n");
                 printf("| Tarefa adicionada a Doing com sucesso!     |\n");
                 printf("+--------------------------------------------+\n");
+                save(fname);
                 break;
             }
             else {
@@ -1038,6 +1043,7 @@ void change_owner() {
                         printf("| Responsável alterado com sucesso!          |\n");
                         printf("+--------------------------------------------+\n");
                         free(owner);
+                        save(fname);
                         systemclear();
                         return;
                     }

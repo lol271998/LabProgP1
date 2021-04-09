@@ -123,11 +123,11 @@ int compareToDo(TASK t1,TASK t2){
 void auxToDo(LIST lista, TASK t,LIST *ant,LIST *atual){
     *ant=lista;
     *atual=lista->next;
-    while ((*atual) != NULL && ( (*atual)->task.priority>t.priority ) ){
+    while ((*atual) != NULL && ( (*atual)->task.priority > t.priority ) ){
         *ant = *atual;
         *atual = (*atual)->next;
     }
-    while ((*atual) != NULL &&  (compareToDo((*atual)->task,t ))>=-1 ){
+    while ((*atual) != NULL &&  (compareToDo((*atual) -> task,t ))>=-1 ){
         *ant = *atual;
         *atual = (*atual)->next;
     }
