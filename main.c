@@ -28,7 +28,7 @@ void func();
 LIST lToDo,lDoing,lDone;
 TASK temp;
 int id,isNew;
-//Default is temp->txt
+//Default is temp.txt
 char* fname;
 
 void systemclear() {
